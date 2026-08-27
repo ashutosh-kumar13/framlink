@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FarmLink AI — लॉग इन</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="login-page">
+
+<!-- Top Header Bar -->
+<header class="auth-header">
+  <div class="header-left">
+    <div class="logo-wrap">
+      <span class="logo-icon"><i data-lucide="leaf"></i></span>
+      <div class="logo-text">
+        <span class="brand-title">FarmLink <span class="ai-text">AI</span></span>
+        <span class="brand-sub">सीधी किसान सेवा</span>
+      </div>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="btn-help-call" onclick="location.href='tel:1800XXXXXXX'">
+      <i data-lucide="phone" style="width:16px;height:16px;"></i> सहायता केंद्र पर कॉल करें
+    </button>
+  </div>
+</header>
+
+<!-- Main Split Container -->
+<div class="auth-wrap split-new">
+  <!-- Left Side Content (Mockup-identical marketing details) -->
+  <div class="auth-left-new">
+    <h2 style="font-size: 38px; line-height: 1.2; font-weight: 800; color: #000; margin-bottom: 8px;">किसानों को मिले सही दाम।<br><span style="color: #10b981;">परिवारों को मिले ताज़ा सामान।</span></h2>
+    <div class="sub" style="font-size: 15.5px; color: #475569; margin-bottom: 28px;">सीधे किसानों से खरीदें और बेचें। पारदर्शी कीमत, स्मार्ट डिलीवरी और आसान सहायता के साथ।</div>
+    
+    <div class="bullet-list" style="margin-bottom: 28px;">
+      <div class="bullet-item">
+        <div class="bullet-icon"><i data-lucide="bookmark"></i></div>
+        <div class="bullet-details">
+          <span class="bullet-title">न्यायपूर्ण दाम</span>
+          <span class="bullet-desc">सीधे किसानों से</span>
+        </div>
+      </div>
+      <div class="bullet-item">
+        <div class="bullet-icon"><i data-lucide="shield-check"></i></div>
+        <div class="bullet-details">
+          <span class="bullet-title">पारदर्शी व्यापार</span>
+          <span class="bullet-desc">कोई छुपी हुई फीस नहीं</span>
+        </div>
+      </div>
+      <div class="bullet-item">
+        <div class="bullet-icon"><i data-lucide="truck"></i></div>
+        <div class="bullet-details">
+          <span class="bullet-title">सुरक्षित डिलीवरी</span>
+          <span class="bullet-desc">समय पर आपके द्वार तक</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Original illustration from the mockup -->
+    <div class="illustration-container">
+      <img src="images/farming_illustration.png" alt="FarmLink AI Smart Mandi">
+    </div>
+
+    <!-- Green Footer Banner -->
+    <div class="bottom-green-banner">
+      किसानों, एफपीओ, खरीदारों और स्थानीय समुदायों के लिए बनाया गया है।<br>
+      विश्वास के साथ व्यापार करें, साथ मिलकर आगे बढ़ें।
+    </div>
+  </div>
+
+  <!-- Right Side Content Card (Single Page Step Manager) -->
+  <div class="auth-right-new">
+    
+    <!-- Step 1: Enter Mobile Number -->
+    <div class="card-welcome" id="step-phone">
+      <div class="icon-circle-welcome">
+        <i data-lucide="phone"></i>
+      </div>
+      <h1>FarmLink AI में आपका स्वागत है</h1>
+      <div class="subtitle">आगे बढ़ने के लिए अपना मोबाइल नंबर दर्ज करें।</div>
+
+      <form id="loginForm" novalidate>
+        <div class="phone-select-wrapper">
+          <select>
+            <option>IN +91</option>
+          </select>
+          <input type="tel" id="mobile" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10" inputmode="numeric" required>
+        </div>
+        <div class="error-msg" id="mobileErr" style="display:none; margin-bottom: 12px; justify-content: center;">
+          ⚠ कृपया 10 अंकों का सही मोबाइल नंबर डालें
+        </div>
+        
+        <button type="submit" class="btn-auth-submit">
+          OTP के साथ आगे बढ़ें &nbsp;&rarr;
+        </button>
+      </form>
+
+      <div class="separator-or">
+        <span>या</span>
+      </div>
+
+      <button class="btn-outline-reg" onclick="showToast('FPO / CSC कोड पंजीकरण जल्द आ रहा है')">
+        FPO / CSC कोड के माध्यम से पंजीकरण करें
+      </button>
+
+      <div class="auth-foot-new">
+        पहली बार FarmLink AI का उपयोग कर रहे हैं? <a href="role-selection.html">नया खाता बनाएं</a>
+      </div>
+
+      <div class="contact-note">
+        सहायता चाहिए? कॉल करें <strong>1800-XXX-XXXX</strong>
+      </div>
+    </div>
+
+    <!-- Step 2: OTP Verification Card (Hidden by Default) -->
+    <div class="card-welcome" id="step-otp" style="display: none;">
+      <div class="icon-circle-welcome">
+        <i data-lucide="shield-alert"></i>
+      </div>
+      <h1>OTP सत्यापन करें</h1>
+      <div class="subtitle" style="margin-bottom: 12px;">Verify the OTP sent to</div>
+      <p style="text-align:center;margin-bottom:22px;font-weight:600;color:var(--ink);">
+        +91 <span id="display-number">98765 43210</span> · <a href="#" id="btn-back-phone" style="color:#10b981;text-decoration:underline;">बदलें</a>
+      </p>
+
+      <form id="otpForm" novalidate>
+        <div class="field">
+          <label style="font-weight: 600; font-size: 13.5px; color: #1e293b; display: block; margin-bottom: 10px;">6 अंकों का OTP डालें</label>
+          <div class="input-otp" id="otpBoxes" style="margin-bottom: 20px;">
+            <input type="text" maxlength="1" inputmode="numeric" style="border: 1.5px solid #cbd5e1;">
+            <input type="text" maxlength="1" inputmode="numeric" style="border: 1.5px solid #cbd5e1;">
+            <input type="text" maxlength="1" inputmode="numeric" style="border: 1.5px solid #cbd5e1;">
+            <input type="text" maxlength="1" inputmode="numeric" style="border: 1.5px solid #cbd5e1;">
+            <input type="text" maxlength="1" inputmode="numeric" style="border: 1.5px solid #cbd5e1;">
+            <input type="text" maxlength="1" inputmode="numeric" style="border: 1.5px solid #cbd5e1;">
+          </div>
+          <div class="error-msg" id="otpErr" style="display:none; justify-content: center; margin-bottom: 16px;">
+            ⚠ OTP गलत है, फिर से कोशिश करें
+          </div>
+        </div>
+        
+        <button type="submit" class="btn-auth-submit" style="margin-bottom:12px;">
+          सत्यापित करें &nbsp;&rarr;
+        </button>
+        <button type="button" class="btn-outline-reg" id="resendBtn" style="padding: 10px 20px; font-size: 13px;">OTP फिर से भेजें (00:30)</button>
+      </form>
+
+      <div class="contact-note" style="margin-top: 36px;">
+        सहायता चाहिए? कॉल करें <strong>1800-XXX-XXXX</strong>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+// Flow Navigation Control
+document.getElementById('loginForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const mobile = document.getElementById('mobile');
+  const err = document.getElementById('mobileErr');
+  const valid = /^[6-9]\d{9}$/.test(mobile.value.trim());
+  mobile.classList.toggle('invalid', !valid);
+  err.style.display = valid ? 'none' : 'flex';
+  
+  if (valid) {
+    document.getElementById('display-number').textContent = mobile.value.trim();
+    document.getElementById('step-phone').style.display = 'none';
+    document.getElementById('step-otp').style.display = 'block';
+    startOtpTimer();
+  }
+});
+
+document.getElementById('btn-back-phone').addEventListener('click', function(e){
+  e.preventDefault();
+  document.getElementById('step-otp').style.display = 'none';
+  document.getElementById('step-phone').style.display = 'block';
+});
+
+// OTP inputs logic
+wireOtpInputs('#otpBoxes input');
+
+document.getElementById('otpForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const vals = [...document.querySelectorAll('#otpBoxes input')].map(i=>i.value);
+  const complete = vals.every(v => v.length === 1);
+  document.getElementById('otpErr').style.display = complete ? 'none' : 'flex';
+  if (complete) window.location.href = 'role-selection.html';
+});
+
+// Resend Countdown
+let timerInterval;
+function startOtpTimer() {
+  clearInterval(timerInterval);
+  let t = 30;
+  const resend = document.getElementById('resendBtn');
+  resend.disabled = true;
+  resend.textContent = `OTP फिर से भेजें (00:30)`;
+  
+  timerInterval = setInterval(() => {
+    t--;
+    if (t <= 0){ 
+      resend.textContent = 'OTP फिर से भेजें'; 
+      resend.disabled = false; 
+      clearInterval(timerInterval); 
+    } else { 
+      resend.textContent = `OTP फिर से भेजें (00:${t.toString().padStart(2,'0')})`; 
+    }
+  }, 1000);
+}
+
+// Load Lucide Icons
+if (!window.lucide) {
+  const lucideScript = document.createElement('script');
+  lucideScript.src = 'https://unpkg.com/lucide@latest';
+  lucideScript.onload = () => { if (window.lucide) window.lucide.createIcons(); };
+  document.head.appendChild(lucideScript);
+} else {
+  window.lucide.createIcons();
+}
+</script>
+</body>
+</html>

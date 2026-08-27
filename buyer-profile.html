@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>प्रोफाइल · KisanMandi</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app-shell">
+  <div class="main-col">
+    <div id="topbar-slot"></div>
+    <main class="content" style="max-width:760px;">
+
+      <h1 style="margin-bottom:4px;">प्रोफाइल</h1>
+      <p style="margin-bottom:18px;">अपनी व्यक्तिगत व व्यापार जानकारी प्रबंधित करें</p>
+
+      <div class="card" style="display:flex;align-items:center;gap:16px;margin-bottom:18px;">
+        <div class="avatar" style="width:58px;height:58px;font-size:20px;">AT</div>
+        <div style="flex:1;">
+          <h2 style="margin-bottom:2px;">अग्रवाल ट्रेडर्स</h2>
+          <p style="margin:0;font-size:13px;">+91 91234 56789 · लखनऊ, उत्तर प्रदेश</p>
+        </div>
+        <span class="badge-verified">✓ सत्यापित खरीदार</span>
+      </div>
+
+      <div class="card" style="margin-bottom:16px;">
+        <h2 style="margin-bottom:14px;">व्यक्तिगत जानकारी</h2>
+        <div class="grid grid-2">
+          <div class="field"><label>व्यवसाय / नाम</label><input type="text" value="अग्रवाल ट्रेडर्स"></div>
+          <div class="field"><label>मोबाइल नंबर</label><input type="text" value="+91 91234 56789" disabled></div>
+          <div class="field"><label>ईमेल</label><input type="email" placeholder="you@example.com"></div>
+          <div class="field"><label>व्यवसाय प्रकार</label><select><option>थोक व्यापारी</option><option>खुदरा विक्रेता</option><option>FPO</option></select></div>
+        </div>
+        <button class="btn btn-primary">बदलाव सहेजें</button>
+      </div>
+
+      <div class="card">
+        <h2 style="margin-bottom:10px;">खाता कार्रवाई</h2>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <a href="login.html" class="btn btn-secondary">लॉग आउट</a>
+          <button class="btn btn-danger">खाता निष्क्रिय करें</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+<script src="js/app.js"></script>
+<script>initShell('buyer','profile','प्रोफाइल');</script>
+</body>
+</html>

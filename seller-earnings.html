@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>कमाई व भुगतान · KisanMandi</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app-shell">
+  <div class="main-col">
+    <div id="topbar-slot"></div>
+    <main class="content">
+
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:18px;">
+        <div><h1>कमाई व भुगतान</h1><p style="margin:0;">अपनी आय और भुगतान इतिहास देखें</p></div>
+        <button class="btn btn-secondary">⬇ स्टेटमेंट डाउनलोड करें</button>
+      </div>
+
+      <div class="grid grid-3" style="margin-bottom:20px;">
+        <div class="stat"><div class="label">कुल कमाई (इस माह)</div><div class="value mono">₹48,200</div><div class="delta up">▲ 12% पिछले माह से</div></div>
+        <div class="stat"><div class="label">लंबित भुगतान</div><div class="value mono">₹9,600</div><div class="delta">2 ऑर्डर</div></div>
+        <div class="stat"><div class="label">कुल जीवनकाल कमाई</div><div class="value mono">₹3,84,500</div></div>
+      </div>
+
+      <h2 style="margin-bottom:10px;">आगामी भुगतान</h2>
+      <div class="table-wrap" style="margin-bottom:22px;">
+        <table>
+          <thead><tr><th>ऑर्डर</th><th>राशि</th><th>अपेक्षित तिथि</th><th>स्थिति</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">#ORD-2291</td><td class="mono">₹43,600</td><td>30 अगस्त</td><td><span class="pill pill-warn">लंबित</span></td></tr>
+            <tr><td class="mono">#ORD-2280</td><td class="mono">₹29,100</td><td>02 सितंबर</td><td><span class="pill pill-warn">लंबित</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 style="margin-bottom:10px;">भुगतान इतिहास</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>तिथि</th><th>ऑर्डर</th><th>राशि</th><th>तरीका</th><th>स्थिति</th></tr></thead>
+          <tbody>
+            <tr><td>25 अगस्त</td><td class="mono">#ORD-2287</td><td class="mono">₹56,200</td><td>बैंक ट्रांसफर</td><td><span class="pill pill-success">पूर्ण</span></td></tr>
+            <tr><td>14 अगस्त</td><td class="mono">#ORD-2265</td><td class="mono">₹39,040</td><td>UPI</td><td><span class="pill pill-success">पूर्ण</span></td></tr>
+            <tr><td>05 अगस्त</td><td class="mono">#ORD-2251</td><td class="mono">₹21,120</td><td>बैंक ट्रांसफर</td><td><span class="pill pill-success">पूर्ण</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="row-card">
+        <div class="rc-row"><span class="rc-label">तिथि</span><span>25 अगस्त</span></div>
+        <div class="rc-row"><span class="rc-label">ऑर्डर</span><span class="mono">#ORD-2287</span></div>
+        <div class="rc-row"><span class="rc-label">राशि</span><span class="mono">₹56,200</span></div>
+        <div class="rc-row"><span class="rc-label">तरीका</span><span>बैंक ट्रांसफर</span></div>
+        <div class="rc-row"><span class="rc-label">स्थिति</span><span class="pill pill-success">पूर्ण</span></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+<script src="js/app.js"></script>
+<script>initShell('seller','earnings','कमाई व भुगतान');</script>
+</body>
+</html>

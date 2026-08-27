@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ऑर्डर · KisanMandi</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app-shell">
+  <div class="main-col">
+    <div id="topbar-slot"></div>
+    <main class="content">
+
+      <h1 style="margin-bottom:4px;">ऑर्डर</h1>
+      <p style="margin-bottom:18px;">अपने सभी ऑर्डर यहाँ प्रबंधित करें</p>
+
+      <div class="tabs">
+        <a href="#" class="active">सभी (5)</a>
+        <a href="#">सक्रिय (3)</a>
+        <a href="#">पूर्ण (2)</a>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ऑर्डर ID</th><th>खरीदार</th><th>फसल</th><th>राशि</th><th>पिकअप तिथि</th><th>स्थिति</th><th></th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="mono">#ORD-2291</td><td>अग्रवाल ट्रेडर्स</td><td>गेहूं · 20 क्विंटल</td><td class="mono">₹43,600</td><td>28 अगस्त</td>
+              <td><span class="pill pill-info">पुष्टि हुई</span></td>
+              <td><a href="pickup-route-tracking.html" class="btn btn-secondary btn-sm">ट्रैक करें</a></td>
+            </tr>
+            <tr>
+              <td class="mono">#ORD-2287</td><td>मेहता एग्रो</td><td>सरसों · 10 क्विंटल</td><td class="mono">₹56,200</td><td>25 अगस्त</td>
+              <td><span class="pill pill-success">भुगतान हुआ</span></td>
+              <td><button class="btn btn-secondary btn-sm">विवरण</button></td>
+            </tr>
+            <tr>
+              <td class="mono">#ORD-2280</td><td>शर्मा फ़ूड्स</td><td>धान · 15 क्विंटल</td><td class="mono">₹29,100</td><td>22 अगस्त</td>
+              <td><span class="pill pill-warn">बातचीत जारी</span></td>
+              <td><button class="btn btn-secondary btn-sm">जवाब दें</button></td>
+            </tr>
+            <tr>
+              <td class="mono">#ORD-2265</td><td>अग्रवाल ट्रेडर्स</td><td>चना · 8 क्विंटल</td><td class="mono">₹39,040</td><td>14 अगस्त</td>
+              <td><span class="pill pill-neutral">पूर्ण</span></td>
+              <td><button class="btn btn-secondary btn-sm">रसीद</button></td>
+            </tr>
+            <tr>
+              <td class="mono">#ORD-2251</td><td>मेहता एग्रो</td><td>मक्का · 12 क्विंटल</td><td class="mono">₹21,120</td><td>05 अगस्त</td>
+              <td><span class="pill pill-neutral">पूर्ण</span></td>
+              <td><button class="btn btn-secondary btn-sm">रसीद</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- mobile cards -->
+      <div class="row-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <strong class="mono">#ORD-2291</strong><span class="pill pill-info">पुष्टि हुई</span>
+        </div>
+        <div class="rc-row"><span class="rc-label">खरीदार</span><span>अग्रवाल ट्रेडर्स</span></div>
+        <div class="rc-row"><span class="rc-label">फसल</span><span>गेहूं · 20 क्विंटल</span></div>
+        <div class="rc-row"><span class="rc-label">राशि</span><span class="mono">₹43,600</span></div>
+        <div class="rc-row"><span class="rc-label">पिकअप</span><span>28 अगस्त</span></div>
+        <a href="pickup-route-tracking.html" class="btn btn-secondary btn-sm btn-block" style="margin-top:10px;">ट्रैक करें</a>
+      </div>
+      <div class="row-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <strong class="mono">#ORD-2287</strong><span class="pill pill-success">भुगतान हुआ</span>
+        </div>
+        <div class="rc-row"><span class="rc-label">खरीदार</span><span>मेहता एग्रो</span></div>
+        <div class="rc-row"><span class="rc-label">फसल</span><span>सरसों · 10 क्विंटल</span></div>
+        <div class="rc-row"><span class="rc-label">राशि</span><span class="mono">₹56,200</span></div>
+        <div class="rc-row"><span class="rc-label">पिकअप</span><span>25 अगस्त</span></div>
+        <button class="btn btn-secondary btn-sm btn-block" style="margin-top:10px;">विवरण</button>
+      </div>
+
+    </main>
+  </div>
+</div>
+<script src="js/app.js"></script>
+<script>initShell('seller','orders','ऑर्डर');</script>
+</body>
+</html>

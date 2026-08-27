@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>नई फसल जोड़ें · KisanMandi</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app-shell">
+  <div class="main-col">
+    <div id="topbar-slot"></div>
+    <main class="content" style="max-width:760px;">
+
+      <div class="breadcrumb"><a href="seller-listings.html">मेरी लिस्टिंग</a> / नई फसल जोड़ें</div>
+      <h1 style="margin-bottom:4px;">नई फसल जोड़ें</h1>
+      <p style="margin-bottom:20px;">फसल की जानकारी भरें ताकि खरीदार आपसे संपर्क कर सकें</p>
+
+      <form id="addForm" novalidate>
+        <div class="card" style="margin-bottom:16px;">
+          <h2 style="margin-bottom:14px;">फसल विवरण</h2>
+          <div class="grid grid-2">
+            <div class="field">
+              <label for="cname">फसल का नाम</label>
+              <select id="cname" required>
+                <option value="">चुनें</option>
+                <option>गेहूं</option><option>धान</option><option>सरसों</option><option>मक्का</option><option>चना</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="grade">ग्रेड / गुणवत्ता</label>
+              <select id="grade" required>
+                <option value="">चुनें</option>
+                <option>Grade A</option><option>Grade B</option><option>Grade C</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="qty">मात्रा (क्विंटल)</label>
+              <input type="number" id="qty" min="1" placeholder="जैसे 20" required>
+            </div>
+            <div class="field">
+              <label for="price">अपेक्षित मूल्य (₹/क्विंटल)</label>
+              <input type="number" id="price" min="1" placeholder="जैसे 2180" required>
+            </div>
+          </div>
+          <div class="alert alert-info">✺ AI सुझाव: इस फसल का इस हफ़्ते का औसत मंडी भाव ₹2,150–₹2,220/क्विंटल है।</div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px;">
+          <h2 style="margin-bottom:14px;">स्थान व उपलब्धता</h2>
+          <div class="grid grid-2">
+            <div class="field">
+              <label for="loc">फसल स्थान</label>
+              <input type="text" id="loc" placeholder="गाँव, ज़िला" required>
+            </div>
+            <div class="field">
+              <label for="ready">उपलब्ध होने की तारीख</label>
+              <input type="text" id="ready" placeholder="dd/mm/yyyy" required>
+            </div>
+          </div>
+          <div class="field">
+            <label class="checkbox-row"><input type="checkbox" checked><span>पिकअप सुविधा उपलब्ध है</span></label>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px;">
+          <h2 style="margin-bottom:14px;">फ़ोटो जोड़ें</h2>
+          <label class="upload-box" for="photos">
+            <div class="icon">📷</div>
+            <div style="font-weight:600;font-size:13.5px;">फसल की फ़ोटो अपलोड करें</div>
+            <div class="hint">अच्छी रोशनी में 2–5 फ़ोटो सबसे बेहतर परिणाम देती हैं</div>
+            <input type="file" id="photos" accept="image/*" multiple style="display:none;">
+          </label>
+        </div>
+
+        <div style="display:flex;gap:10px;justify-content:flex-end;">
+          <a href="seller-listings.html" class="btn btn-secondary">रद्द करें</a>
+          <button type="submit" class="btn btn-primary">लिस्टिंग प्रकाशित करें</button>
+        </div>
+      </form>
+
+    </main>
+  </div>
+</div>
+<script src="js/app.js"></script>
+<script>
+initShell('seller','listings','नई फसल जोड़ें');
+document.getElementById('addForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  let ok = true;
+  ['cname','grade','qty','price','loc','ready'].forEach(id=>{
+    const el = document.getElementById(id);
+    const bad = !el.value.trim();
+    el.classList.toggle('invalid', bad);
+    if (bad) ok = false;
+  });
+  if (ok){ showToast('✓ लिस्टिंग सफलतापूर्वक प्रकाशित हुई'); setTimeout(()=>window.location.href='seller-listings.html', 900); }
+});
+</script>
+</body>
+</html>

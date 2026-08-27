@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>वॉइस सहायता · KisanMandi</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app-shell">
+  <div class="main-col">
+    <div id="topbar-slot"></div>
+    <main class="content" style="max-width:680px;">
+
+      <h1 style="margin-bottom:4px;">वॉइस सहायक</h1>
+      <p style="margin-bottom:22px;">बोलकर पूछें — जैसे "आज गेहूं का भाव क्या है?"</p>
+
+      <div class="card" style="text-align:center;padding:36px 20px;margin-bottom:18px;">
+        <button id="micBtn" style="width:84px;height:84px;border-radius:50%;background:var(--soil);border:none;color:var(--turmeric);
+          font-size:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">◉</button>
+        <p id="micStatus" style="margin:0;font-weight:600;">बोलने के लिए दबाएँ · Tap to speak</p>
+        <p class="hint" style="margin-top:4px;">हिंदी, English या अपनी क्षेत्रीय भाषा में बोलें</p>
+      </div>
+
+      <div class="card">
+        <h2 style="margin-bottom:12px;">हाल की बातचीत</h2>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="background:var(--soil-tint);padding:10px 14px;border-radius:var(--radius-m);align-self:flex-end;max-width:80%;font-size:13.5px;">आज गेहूं का भाव क्या है?</div>
+          <div style="background:var(--card);border:1px solid var(--line);padding:10px 14px;border-radius:var(--radius-m);max-width:85%;font-size:13.5px;">आज गेहूं का भाव ₹2,180 प्रति क्विंटल है, जो पिछले हफ़्ते से 2.1% अधिक है।</div>
+          <div style="background:var(--soil-tint);padding:10px 14px;border-radius:var(--radius-m);align-self:flex-end;max-width:80%;font-size:13.5px;">मेरा अगला पिकअप कब है?</div>
+          <div style="background:var(--card);border:1px solid var(--line);padding:10px 14px;border-radius:var(--radius-m);max-width:85%;font-size:13.5px;">आपका अगला पिकअप कल सुबह 9 बजे है — ड्राइवर सुनील यादव आएंगे।</div>
+        </div>
+      </div>
+
+      <h2 style="margin:20px 0 10px;">सुझाए गए प्रश्न</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <button class="btn btn-secondary btn-sm">मेरी कमाई कितनी है?</button>
+        <button class="btn btn-secondary btn-sm">नई फसल कैसे जोड़ें?</button>
+        <button class="btn btn-secondary btn-sm">सरसों बेचूं या नहीं?</button>
+      </div>
+
+    </main>
+  </div>
+</div>
+<script src="js/app.js"></script>
+<script>
+initShell('seller','voice','वॉइस सहायक');
+let listening = false;
+document.getElementById('micBtn').addEventListener('click', function(){
+  listening = !listening;
+  this.style.background = listening ? 'var(--terracotta)' : 'var(--soil)';
+  document.getElementById('micStatus').textContent = listening ? '🎙 सुन रहा हूँ...' : 'बोलने के लिए दबाएँ · Tap to speak';
+});
+</script>
+</body>
+</html>

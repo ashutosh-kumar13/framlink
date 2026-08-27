@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seller Dashboard · KisanMandi</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app-shell">
+  <div class="main-col">
+    <div id="topbar-slot"></div>
+    <main class="content">
+
+      <!-- Inline Top Header -->
+      <div class="topbar-inline">
+        <div>
+          <h1>👋 ईशाताई, स्वागत है!</h1>
+          <div class="sub">मंडी, मौसम और AI सुझाव के साथ अपनी खेती को और बेहतर बनाएं।</div>
+        </div>
+        <button class="btn-plan" onclick="showToast('सोलरफ्लैक्स प्लान फीचर जल्द आ रहा है')">
+          <i data-lucide="sun"></i> सोलरफ्लैक्स प्लान करें
+        </button>
+      </div>
+
+      <!-- Top Row Stat Cards Grid -->
+      <div class="grid grid-4" style="margin-bottom: 24px;">
+        <a href="seller-add-listing.html" class="stat-card-custom stat-card-green">
+          <div class="plus-icon-wrap">+</div>
+          <div>
+            <h3>नई फसल जोड़ें</h3>
+            <p>अपनी फसल एंट्री बनाएं</p>
+          </div>
+        </a>
+
+        <div class="stat-card-custom">
+          <div class="badge-red">नई अपडेट</div>
+          <div class="stat-val-large" style="color: #10b981;">3</div>
+          <div class="sub-lbl">सक्रिय ऑर्डर्स</div>
+          <div class="desc-lbl">आपकी फसलों का इंतजार</div>
+        </div>
+
+        <div class="stat-card-custom">
+          <div class="badge-green-custom">↑ 18%</div>
+          <div class="stat-val-large">₹12,850</div>
+          <div class="sub-lbl">साप्ताहिक कमाई</div>
+          <div class="desc-lbl">पिछले सप्ताह से बेहतर</div>
+        </div>
+
+        <a href="seller-ai-insights.html" class="stat-card-custom stat-card-yellow">
+          <div class="lightning-icon">⚡</div>
+          <div>
+            <h3>AI मार्केट सुझाव</h3>
+            <p>बेहतर दाम पाएं और बेचें समझदारी से</p>
+          </div>
+          <span class="arrow-right">&rsaquo;</span>
+        </a>
+      </div>
+
+      <!-- Middle Grid: Tomato Pickup Details + Today's Mandi Status -->
+      <div class="grid" style="grid-template-columns: 2.2fr 1fr; align-items: stretch; margin-bottom: 24px; gap: 24px;">
+        <!-- Left: Pickup Details -->
+        <div class="pickup-panel grid grid-2" style="grid-template-columns: 1fr 1.4fr; gap: 24px; align-items: center;">
+          <!-- Product card representation -->
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <span style="font-size: 44px; line-height: 1;">🍅</span>
+            </div>
+            <div class="product-title">ताज़े टमाटर</div>
+            <div class="product-qty">240 kg</div>
+            <div class="product-meta">
+              ग्रेड: A<br>
+              ऑर्डर कोड: ORD-101<br>
+              स्थान: कोल्हापुर, पुणे
+            </div>
+          </div>
+          <!-- Pickup scheduling information -->
+          <div class="pickup-details-wrap">
+            <div class="pickup-header">
+              <span class="badge-pickup-status">पिकअप निर्धारित</span>
+              <span class="pickup-time">आज, सुबह 10:30 बजे</span>
+            </div>
+            <div class="pickup-info-grid">
+              <div class="pickup-info-item">
+                <label>किसान</label>
+                <div class="val">सुरेश कुमार</div>
+              </div>
+              <div class="pickup-info-item">
+                <label>वाहन नंबर</label>
+                <div class="val">MH 12 AB 1234</div>
+              </div>
+            </div>
+            <div class="otp-container">
+              <div class="otp-label">पिकअप OTP</div>
+              <div class="otp-number-row">
+                <span>4</span>
+                <span>8</span>
+                <span>2</span>
+                <span>1</span>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn-pickup-track" onclick="location.href='pickup-route-tracking.html'">
+                <i data-lucide="navigation" style="width:16px;height:16px;"></i> पिकअप ट्रैक करें
+              </button>
+              <button class="btn-pickup-alert" onclick="showToast('ड्राइवर को अलर्ट भेज दिया गया है!')">
+                <i data-lucide="bell" style="width:16px;height:16px;"></i> ड्राइवर को अलर्ट
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Mandi status list -->
+        <div class="mandi-card">
+          <div class="mandi-header">
+            <h2>आज की मंडी स्थिति</h2>
+            <a href="seller-ai-insights.html">और देखें &rsaquo;</a>
+          </div>
+          <div class="mandi-item">
+            <div class="mandi-item-left">
+              <div class="mandi-item-icon">🍅</div>
+              <div class="mandi-item-details">
+                <span class="mandi-item-title">ताज़े टमाटर</span>
+                <span class="mandi-item-sub">मंदसौर बाजार · ORD-101</span>
+              </div>
+            </div>
+            <div class="mandi-item-right">
+              <span class="mandi-item-price">₹22/kg</span>
+              <div class="mandi-item-trend trend-up">↑ 8%</div>
+            </div>
+          </div>
+          <div class="mandi-item">
+            <div class="mandi-item-left">
+              <div class="mandi-item-icon">🧅</div>
+              <div class="mandi-item-details">
+                <span class="mandi-item-title">लाल प्याज</span>
+                <span class="mandi-item-sub">उज्जैन कृषि बाजार · ORD-102</span>
+              </div>
+            </div>
+            <div class="mandi-item-right">
+              <span class="mandi-item-price">₹18/kg</span>
+              <div class="mandi-item-trend trend-up">↑ 5%</div>
+            </div>
+          </div>
+          <div class="mandi-banner-link" onclick="location.href='seller-ai-insights.html'">
+            <div class="mandi-banner-left">
+              <span class="mandi-banner-icon">📊</span>
+              <div class="mandi-banner-text">
+                <span class="mandi-banner-title">दाम और अधिक देखें</span>
+                <span class="mandi-banner-sub">अपने उत्पाद के बेहतर दाम पाएं</span>
+              </div>
+            </div>
+            <span class="mandi-banner-arrow">&rarr;</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Status Grid Cards -->
+      <div class="grid grid-4">
+        <div class="bottom-card-custom">
+          <div class="bottom-card-icon">🌤️</div>
+          <div class="bottom-card-details">
+            <span class="bottom-card-title">मौसम अपडेट</span>
+            <span class="bottom-card-value">28°C, हल्की धूप</span>
+            <span class="bottom-card-sub">पुणे, महाराष्ट्र</span>
+          </div>
+        </div>
+        <div class="bottom-card-custom" onclick="location.href='seller-ai-insights.html'" style="cursor:pointer;">
+          <div class="bottom-card-icon">🌾</div>
+          <div class="bottom-card-details">
+            <span class="bottom-card-title">AI सुझाव</span>
+            <span class="bottom-card-value">टमाटर की बुआई अच्छी है,</span>
+            <span class="bottom-card-sub">सिंचाई बनाए रखें</span>
+          </div>
+        </div>
+        <div class="bottom-card-custom" onclick="location.href='seller-earnings.html'" style="cursor:pointer;">
+          <div class="bottom-card-icon">₹</div>
+          <div class="bottom-card-details">
+            <span class="bottom-card-title">भुगतान स्थिति</span>
+            <span class="bottom-card-value">₹5,300</span>
+            <span class="bottom-card-sub">अगला भुगतान 2 दिन में</span>
+          </div>
+        </div>
+        <div class="bottom-card-custom" onclick="location.href='help-center.html'" style="cursor:pointer;">
+          <div class="bottom-card-icon">🎧</div>
+          <div class="bottom-card-details">
+            <span class="bottom-card-title">सहायता केंद्र</span>
+            <span class="bottom-card-value">हम आपकी कैसे मदद कर सकते हैं?</span>
+            <span class="bottom-card-sub">24x7 सहायता उपलब्ध</span>
+          </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+<script src="js/app.js"></script>
+<script>initShell('seller','home','Seller Dashboard · होम');</script>
+</body>
+</html>

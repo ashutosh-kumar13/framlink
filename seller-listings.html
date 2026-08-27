@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>मेरी लिस्टिंग · KisanMandi</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app-shell">
+  <div class="main-col">
+    <div id="topbar-slot"></div>
+    <main class="content">
+
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:18px;">
+        <div><h1>मेरी लिस्टिंग</h1><p style="margin:0;">अपनी फसलों को प्रबंधित करें</p></div>
+        <a href="seller-add-listing.html" class="btn btn-accent">+ नई फसल जोड़ें</a>
+      </div>
+
+      <div class="card" style="margin-bottom:18px;">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+          <input type="text" placeholder="🔍 फसल का नाम खोजें..." style="flex:1;min-width:180px;">
+          <select style="max-width:170px;">
+            <option>सभी श्रेणियाँ</option>
+            <option>अनाज</option>
+            <option>तिलहन</option>
+            <option>सब्ज़ियाँ</option>
+          </select>
+          <select style="max-width:170px;">
+            <option>सभी स्थिति</option>
+            <option>सक्रिय</option>
+            <option>बिक चुकी</option>
+            <option>ड्राफ्ट</option>
+          </select>
+          <select style="max-width:170px;">
+            <option>क्रमबद्ध करें: नई</option>
+            <option>मूल्य: ऊँचा से नीचा</option>
+            <option>मूल्य: नीचा से ऊँचा</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="alert alert-info">✺ AI मूल्य सुझाव: गेहूं का मंडी भाव इस हफ़्ते ₹2,180/क्विंटल — आपकी लिस्टिंग औसत भाव के अनुसार है।</div>
+
+      <div class="grid grid-3">
+        <div class="card">
+          <div class="crop-thumb" style="margin-bottom:10px;">🌾</div>
+          <div style="display:flex;justify-content:space-between;align-items:start;">
+            <h3>गेहूं · Grade A</h3>
+            <span class="pill pill-success"><span class="dot"></span>सक्रिय</span>
+          </div>
+          <p style="margin:2px 0 10px;font-size:12.5px;">📍 लखनऊ, UP · 20 क्विंटल उपलब्ध</p>
+          <div class="mono" style="font-size:18px;font-weight:600;margin-bottom:12px;">₹2,180<span style="font-size:12px;color:var(--ink-soft);font-weight:400;">/क्विंटल</span></div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-secondary btn-sm" style="flex:1;">देखें</button>
+            <button class="btn btn-secondary btn-sm" style="flex:1;">अपडेट</button>
+            <button class="btn btn-danger btn-sm" aria-label="Delete">🗑</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="crop-thumb" style="margin-bottom:10px;">🌾</div>
+          <div style="display:flex;justify-content:space-between;align-items:start;">
+            <h3>धान · Grade B</h3>
+            <span class="pill pill-success"><span class="dot"></span>सक्रिय</span>
+          </div>
+          <p style="margin:2px 0 10px;font-size:12.5px;">📍 लखनऊ, UP · 35 क्विंटल उपलब्ध</p>
+          <div class="mono" style="font-size:18px;font-weight:600;margin-bottom:12px;">₹1,940<span style="font-size:12px;color:var(--ink-soft);font-weight:400;">/क्विंटल</span></div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-secondary btn-sm" style="flex:1;">देखें</button>
+            <button class="btn btn-secondary btn-sm" style="flex:1;">अपडेट</button>
+            <button class="btn btn-danger btn-sm" aria-label="Delete">🗑</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="crop-thumb" style="margin-bottom:10px;">🌻</div>
+          <div style="display:flex;justify-content:space-between;align-items:start;">
+            <h3>सरसों · Grade A</h3>
+            <span class="pill pill-warn"><span class="dot"></span>बातचीत जारी</span>
+          </div>
+          <p style="margin:2px 0 10px;font-size:12.5px;">📍 लखनऊ, UP · 10 क्विंटल उपलब्ध</p>
+          <div class="mono" style="font-size:18px;font-weight:600;margin-bottom:12px;">₹5,620<span style="font-size:12px;color:var(--ink-soft);font-weight:400;">/क्विंटल</span></div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-secondary btn-sm" style="flex:1;">देखें</button>
+            <button class="btn btn-secondary btn-sm" style="flex:1;">अपडेट</button>
+            <button class="btn btn-danger btn-sm" aria-label="Delete">🗑</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="crop-thumb" style="margin-bottom:10px;">🌽</div>
+          <div style="display:flex;justify-content:space-between;align-items:start;">
+            <h3>मक्का · Grade B</h3>
+            <span class="pill pill-neutral">बिक चुकी</span>
+          </div>
+          <p style="margin:2px 0 10px;font-size:12.5px;">📍 लखनऊ, UP · 0 क्विंटल शेष</p>
+          <div class="mono" style="font-size:18px;font-weight:600;margin-bottom:12px;">₹1,760<span style="font-size:12px;color:var(--ink-soft);font-weight:400;">/क्विंटल</span></div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-secondary btn-sm" style="flex:1;">देखें</button>
+            <button class="btn btn-secondary btn-sm" style="flex:1;" disabled>अपडेट</button>
+            <button class="btn btn-danger btn-sm" aria-label="Delete">🗑</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- empty state (shown when no listings) — hidden by default -->
+      <div class="empty-state" style="display:none;margin-top:20px;">
+        <div class="icon">🌾</div>
+        <h3>अभी कोई लिस्टिंग नहीं है</h3>
+        <p>अपनी पहली फसल जोड़कर खरीदारों तक पहुँचें।</p>
+        <a href="seller-add-listing.html" class="btn btn-accent" style="margin-top:12px;">+ नई फसल जोड़ें</a>
+      </div>
+
+    </main>
+  </div>
+</div>
+<script src="js/app.js"></script>
+<script>initShell('seller','listings','मेरी लिस्टिंग');</script>
+</body>
+</html>
