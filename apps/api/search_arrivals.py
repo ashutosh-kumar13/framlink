@@ -1,7 +1,8 @@
 import requests
 import json
+import os
 
-API_KEY = "579b464db66ec23bdd0000015655d20116c7455865b99496afb21bf1"
+API_KEY = os.getenv("DATA_GOV_API_KEY", "")
 RESOURCE_ID = "9ef84268-d588-465a-a308-a864a43d0070"
 
 url = f"https://api.data.gov.in/resource/{RESOURCE_ID}"

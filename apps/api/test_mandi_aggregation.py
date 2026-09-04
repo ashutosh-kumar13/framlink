@@ -2,7 +2,7 @@ import requests
 import json
 import os
 
-API_KEY = "579b464db66ec23bdd0000015655d20116c7455865b99496afb21bf1"
+API_KEY = os.getenv("DATA_GOV_API_KEY", "")
 
 def test_aggregation():
     # Calling our local API proxy
