@@ -1,9 +1,5 @@
-/* Uttar Pradesh postal-location helper. The supplied data.gov.in key is intended
- * for this public prototype; production should proxy this call server-side. */
+/* Uttar Pradesh postal-location helper. The API key stays on the server. */
 (function () {
-  const API_KEY = "579b464db66ec23bdd0000015655d20116c7455865b99496afb21bf1";
-  const RESOURCE_ID = "709e9d78-bf11-487d-93fd-d547d24cc0ef";
-  const ROOT = `https://api.data.gov.in/resource/${RESOURCE_ID}`;
 
   function unique(values) {
     return [...new Set(values.filter(Boolean).map((value) => String(value).trim()))].sort((a, b) => a.localeCompare(b, "hi"));
@@ -12,15 +8,10 @@
   async function lookupPincode(pincode) {
     const pin = String(pincode || "").replace(/\D/g, "");
     if (!/^\d{6}$/.test(pin)) throw new Error("6 अंकों का सही पिनकोड दर्ज करें।");
-    const url = new URL(ROOT);
-    url.searchParams.set("api-key", API_KEY);
-    url.searchParams.set("format", "json");
-    url.searchParams.set("limit", "100");
-    url.searchParams.set("filters[pincode]", pin);
-    const response = await fetch(url);
+    const response = await fetch(`/api/post-office?pincode=${encodeURIComponent(pin)}`);
     if (!response.ok) throw new Error("Postal location service अभी उपलब्ध नहीं है।");
     const payload = await response.json();
-    const records = (payload.records || []).filter((record) => String(record.statename || "").toUpperCase() === "UTTAR PRADESH");
+    const records = payload.records || [];
     if (!records.length) throw new Error("इस पिनकोड के लिए Uttar Pradesh में कोई Post Office नहीं मिला।");
     const preferredRecord = records.find((record) => String(record.delivery || "").toLowerCase() === "delivery") || records[0];
     return {

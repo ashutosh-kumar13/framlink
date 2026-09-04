@@ -1,8 +1,10 @@
 const express = require("express");
+require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const RESOURCE_ID = "9ef84268-d588-465a-a308-a864a43d0070";
+const POST_OFFICE_RESOURCE_ID = "709e9d78-bf11-487d-93fd-d547d24cc0ef";
 const DATA_GOV_URL = `https://api.data.gov.in/resource/${RESOURCE_ID}`;
 
 app.use(express.json());
@@ -28,6 +30,29 @@ app.get("/", (req, res) => {
 
 app.get("/health", (req, res) => {
   res.json({ ok: true, service: "FarmLink Retell API" });
+});
+
+app.get("/api/post-office", async (req, res) => {
+  const pincode = String(req.query.pincode || "").replace(/\D/g, "");
+  const apiKey = process.env.DATA_GOV_API_KEY;
+  if (!apiKey) return res.status(503).json({ ok: false, message: "DATA_GOV_API_KEY is not configured." });
+  if (!/^\d{6}$/.test(pincode)) return res.status(400).json({ ok: false, message: "A valid six-digit pincode is required." });
+
+  const params = new URLSearchParams({
+    "api-key": apiKey,
+    format: "json",
+    limit: "100",
+    "filters[pincode]": pincode,
+  });
+  try {
+    const upstream = await fetch(`https://api.data.gov.in/resource/${POST_OFFICE_RESOURCE_ID}?${params}`);
+    if (!upstream.ok) return res.status(502).json({ ok: false, message: "Postal location service is temporarily unavailable." });
+    const payload = await upstream.json();
+    return res.json({ ok: true, records: (payload.records || []).filter((record) => String(record.statename || "").toUpperCase() === "UTTAR PRADESH") });
+  } catch (error) {
+    console.error("Post office API error:", error);
+    return res.status(502).json({ ok: false, message: "Could not connect to the postal location service." });
+  }
 });
 
 async function getMandiPrice(req, res) {
