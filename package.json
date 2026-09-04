@@ -7,7 +7,6 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "dotenv": "^17.4.2",
     "express": "^4.21.2"
   }
 }

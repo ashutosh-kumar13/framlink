@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Mandi Price Forecast</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i data-lucide="leaf"></i> AI Mandi Price Forecasting</h1>
+            <p>Enter details to predict mandi prices for the next 30 days</p>
+        </header>
+
+        <section class="selection-card">
+            <div class="input-grid">
+                <div class="input-item">
+                    <label for="state">State</label>
+                    <input type="text" id="state" placeholder="e.g. Uttar Pradesh">
+                </div>
+                <div class="input-item">
+                    <label for="district">District</label>
+                    <input type="text" id="district" placeholder="e.g. Lucknow">
+                </div>
+                <div class="input-item">
+                    <label for="mandi">Mandi</label>
+                    <input type="text" id="mandi" placeholder="e.g. Malihabad">
+                </div>
+                <div class="input-item">
+                    <label for="commodity">Commodity</label>
+                    <input type="text" id="commodity" placeholder="e.g. Rice">
+                </div>
+            </div>
+            <button id="predict-btn" class="btn-primary">Predict Next 30 Days</button>
+            <p id="status-msg" class="status-msg"></p>
+        </section>
+
+        <main id="results-area" class="hidden">
+            <div class="dashboard-grid">
+                <div class="card stat-card">
+                    <h3>Latest Actual Price</h3>
+                    <p class="price-val" id="latest-price">₹--</p>
+                    <small id="variety-label">Variety: --</small>
+                </div>
+                <div class="card stat-card">
+                    <h3>Expected Trend</h3>
+                    <p class="trend-val" id="trend-val">--</p>
+                </div>
+                <div class="card stat-card">
+                    <h3>Model Confidence</h3>
+                    <p class="accuracy-val">MAE: <span id="mae-val">₹--</span></p>
+                    <small>Model: <span id="model-name">--</span></small>
+                </div>
+                <div class="card stat-card" id="weather-card">
+                    <h3>Weather Impact</h3>
+                    <p id="weather-desc">No data</p>
+                    <small id="weather-precip">Rain: -- mm</small>
+                </div>
+
+                <div class="card chart-card">
+                    <h3>Price Forecast (Next 30 Days)</h3>
+                    <p id="coverage-info" class="coverage-info"></p>
+                    <div style="height: 400px; position: relative;">
+                        <canvas id="forecastChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card table-card">
+                    <h3>Detailed Forecast Table</h3>
+                    <div class="table-wrapper">
+                        <table id="forecast-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Predicted Price</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <section id="debug-monitor" class="card">
+            <div class="debug-header">
+                <h3><i data-lucide="monitor"></i> Network & System Logs</h3>
+                <button id="clear-logs" class="btn-secondary">Clear</button>
+            </div>
+            <div id="debug-logs" class="debug-logs">
+                <div class="log-entry system">System initialized. Ready for requests.</div>
+            </div>
+        </section>
+
+        <footer>
+            <p class="disclaimer">
+                <strong>Disclaimer:</strong> Forecasts are estimates based on historical market data.
+                Actual prices may differ due to unexpected market conditions.
+            </p>
+        </footer>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
