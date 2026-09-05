@@ -1,0 +1,1 @@
+{"features": ["trend", "day_of_week"], "best_model": "Linear+Seasonal (Stable)", "mae_xgb": 0.0, "data_rows": 400}

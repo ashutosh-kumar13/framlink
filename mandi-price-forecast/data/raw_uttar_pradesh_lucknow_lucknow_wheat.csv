@@ -1,0 +1,101 @@
+arrival_date,commodity,commodity_code,district,grade,market,max_price,min_price,modal_price,state,variety
+04/09/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2690.0,2690,2690.0,Uttar Pradesh,Medium
+04/09/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2690.0,2690,2690.0,Uttar Pradesh,Medium Fine
+04/09/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2500.0,2500,2500.0,Uttar Pradesh,Dara
+03/09/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2690.0,2690,2690.0,Uttar Pradesh,Medium
+03/09/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2690.0,2690,2690.0,Uttar Pradesh,Medium Fine
+03/09/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2500.0,2500,2500.0,Uttar Pradesh,Other
+02/09/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2690.0,2640,2687.59,Uttar Pradesh,Medium
+02/09/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2690.0,2640,2689.4,Uttar Pradesh,Medium
+01/09/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2450.0,2450,2450.0,Uttar Pradesh,Mill Quality
+01/09/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2600.0,2500,2547.84,Uttar Pradesh,Dara
+01/09/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2450.0,2450,2450.0,Uttar Pradesh,Dara Mill Quality
+01/09/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2690.0,2640,2684.14,Uttar Pradesh,Medium
+31/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+31/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Deshi
+31/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2400.0,2400,2400.0,Uttar Pradesh,Dara Mill Quality
+31/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2500.0,2500,2500.0,Uttar Pradesh,Other
+31/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2400.0,2400,2400.0,Uttar Pradesh,Dara
+31/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2570.0,2570,2570.0,Uttar Pradesh,Local
+30/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+29/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+29/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2450.0,2450,2450.0,Uttar Pradesh,Mill Quality
+29/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2480.0,2480,2480.0,Uttar Pradesh,Dara Mill Quality
+28/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+27/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+26/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+26/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2400.0,2400,2400.0,Uttar Pradesh,Dara
+25/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2425.0,2425,2425.0,Uttar Pradesh,Dara
+25/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2400.0,2400,2400.0,Uttar Pradesh,Dara Mill Quality
+25/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+24/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+24/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium Fine
+24/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Super Fine
+24/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2400.0,2400,2400.0,Uttar Pradesh,Dara Mill Quality
+24/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2560.0,2550,2552.12,Uttar Pradesh,Local
+24/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2450.0,2450,2450.0,Uttar Pradesh,Mill Quality
+24/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2425.0,2400,2414.9,Uttar Pradesh,Dara
+23/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+23/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2550.0,2400,2466.39,Uttar Pradesh,Dara
+22/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2550.0,2550,2550.0,Uttar Pradesh,Local
+22/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2450.0,2450,2450.0,Uttar Pradesh,Mill Quality
+22/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+22/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Kalawal
+22/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium Fine
+22/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2425.0,2400,2413.74,Uttar Pradesh,Dara
+21/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Super Fine
+21/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2425.0,2400,2415.36,Uttar Pradesh,Dara
+21/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+21/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium Fine
+21/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Deshi
+20/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+20/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2450.0,2450,2450.0,Uttar Pradesh,Mill Quality
+20/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2550.0,2550,2550.0,Uttar Pradesh,Local
+20/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium Fine
+19/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+19/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2425.0,2400,2415.55,Uttar Pradesh,Dara
+19/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2550.0,2550,2550.0,Uttar Pradesh,Local
+19/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium Fine
+19/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2450.0,2450,2450.0,Uttar Pradesh,Mill Quality
+19/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2500.0,2500,2500.0,Uttar Pradesh,Other
+18/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+18/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2550.0,2550,2550.0,Uttar Pradesh,Local
+18/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium Fine
+18/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2590.0,2590,2590.0,Uttar Pradesh,Dara
+17/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium Fine
+17/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2400.0,2400,2400.0,Uttar Pradesh,Dara Mill Quality
+17/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Deshi
+17/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Kalawal
+17/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+16/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,3500.0,3500,3500.0,Uttar Pradesh,Other
+16/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium Fine
+16/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Deshi
+16/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2600.0,2600,2600.0,Uttar Pradesh,Dara
+16/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+15/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+14/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2500.57,2500,2500.07,Uttar Pradesh,Other
+14/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2425.0,2400,2421.38,Uttar Pradesh,Dara
+14/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Deshi
+14/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2620,2634.56,Uttar Pradesh,Medium Fine
+14/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2550.0,2550,2550.0,Uttar Pradesh,Local
+14/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2640.0,2640,2640.0,Uttar Pradesh,Medium
+13/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2590.0,2590,2590.0,Uttar Pradesh,Dara
+13/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2400.0,2400,2400.0,Uttar Pradesh,Dara Mill Quality
+13/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2620.0,2620,2620.0,Uttar Pradesh,Medium
+13/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2620.0,2400,2610.85,Uttar Pradesh,Medium
+13/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2620.0,2600,2608.92,Uttar Pradesh,Medium Fine
+12/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2560.0,2560,2560.0,Uttar Pradesh,Local
+12/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2620.0,2400,2579.45,Uttar Pradesh,Medium
+12/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2620.0,2620,2620.0,Uttar Pradesh,Medium Fine
+12/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2410.0,2410,2410.0,Uttar Pradesh,Dara
+11/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2400.0,2400,2400.0,Uttar Pradesh,Medium
+11/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2400.0,2400,2400.0,Uttar Pradesh,Medium Fine
+11/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2570.0,2560,2563.54,Uttar Pradesh,Local
+10/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2400.0,2400,2400.0,Uttar Pradesh,Dara Mill Quality
+10/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2560.0,2560,2560.0,Uttar Pradesh,Local
+10/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2400.0,2400,2400.0,Uttar Pradesh,Medium Fine
+10/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2400.0,2400,2400.0,Uttar Pradesh,Dara
+10/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2400.0,2400,2400.0,Uttar Pradesh,Medium
+10/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2400.0,2400,2400.0,Uttar Pradesh,Other
+09/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2400.0,2400,2400.0,Uttar Pradesh,Medium Fine
+09/08/2026,Wheat,1,Lucknow,FAQ,Lucknow APMC,2500.11,2500,2500.01,Uttar Pradesh,Other

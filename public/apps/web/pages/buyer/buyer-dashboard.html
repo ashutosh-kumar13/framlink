@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="hi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buyer Dashboard · KisanMandi</title>
+    <link rel="stylesheet" href="../../shared/assets/css/design-system.css" />
+    <link rel="stylesheet" href="../../shared/assets/css/components.css" />
+    <link rel="stylesheet" href="../../shared/assets/css/compact-ui.css" />
+    <link rel="stylesheet" href="../../shared/assets/css/style.css" />
+  </head>
+  <body>
+    <div id="app-shell">
+      <div class="main-col">
+        <div id="topbar-slot"></div>
+        <main class="content">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
+              flex-wrap: wrap;
+              gap: 12px;
+              margin-bottom: 18px;
+            "
+          >
+            <div>
+              <h1 id="dashboardGreeting">नमस्ते, Buyer जी</h1>
+              <p style="margin: 0">आज कौन सी फसल खरीदना चाहेंगे?</p>
+            </div>
+            <a href="buyer-marketplace.html" class="btn btn-accent"
+              ><i data-lucide="search" style="width:16px"></i> फसलें ब्राउज़ करें</a
+            >
+          </div>
+
+          <div class="grid grid-3" style="margin-bottom: 20px">
+            <div class="stat">
+              <div class="label">सक्रिय ऑर्डर</div>
+              <div class="value" id="activeOrdersCount">0</div>
+            </div>
+            <div class="stat">
+              <div class="label">इस माह खर्च</div>
+              <div class="value mono" id="monthlySpend">₹0</div>
+            </div>
+            <div class="stat">
+              <div class="label">सहेजी गई फसलें</div>
+              <div class="value" id="savedListingsCount">0</div>
+            </div>
+          </div>
+
+          <div
+            class="grid grid-2"
+            style="align-items: start; margin-bottom: 16px"
+          >
+            <div class="card">
+              <div class="card-title-row">
+                <h2>सक्रिय ऑर्डर</h2>
+                <a
+                  href="buyer-orders.html"
+                  style="
+                    font-size: 12.5px;
+                    font-weight: 600;
+                    color: var(--soil);
+                  "
+                  >सभी देखें ›</a
+                >
+              </div>
+              <div
+                id="activeOrdersList"
+                style="display: flex; flex-direction: column; gap: 12px"
+              ></div>
+            </div>
+
+            <div class="card">
+              <div class="card-title-row"><h2>हाल में देखी गई फसलें</h2></div>
+              <div
+                id="recentListingsList"
+                style="display: flex; gap: 10px; flex-wrap: wrap"
+              >
+                <div class="alert alert-info">फसलें लोड हो रही हैं...</div>
+              </div>
+              <a
+                href="buyer-marketplace.html"
+                style="
+                  font-size: 12.5px;
+                  font-weight: 600;
+                  color: var(--soil);
+                  display: block;
+                  margin-top: 10px;
+                "
+                >बाज़ार देखें ›</a
+              >
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title-row"><h2>नज़दीकी उपज व मंडी भाव</h2></div>
+            <div class="ticker">
+                    <div class="ticker-item">
+                <i data-lucide="wheat" style="width:14px"></i> गेहूं ₹2,180/क्विंटल <span class="up">▲2.1%</span>
+              </div>
+              <div class="ticker-item">
+                <i data-lucide="sprout" style="width:14px"></i> सरसों ₹5,620/क्विंटल <span class="up">▲1.4%</span>
+              </div>
+              <div class="ticker-item">
+                <i data-lucide="wheat" style="width:14px"></i> मक्का ₹1,760/क्विंटल <span class="up">▲0.8%</span>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <script src="../../shared/assets/js/app.js"></script>
+    <script src="../../shared/assets/js/buyer-data.js"></script>
+    <script src="../../shared/assets/js/ui.js"></script>
+    <script>
+      initShell("buyer", "home", "Buyer Dashboard · होम");
+
+      async function loadDashboard() {
+        try {
+          const [buyerData, orders, listings] = await Promise.all([
+            window.farmlinkBuyerData.fetchBuyerProfile(),
+            window.farmlinkBuyerData.fetchBuyerOrders(),
+            window.farmlinkBuyerData.fetchBuyerListings(),
+          ]);
+          const buyerName = buyerData?.user?.full_name || "Buyer";
+          document.getElementById("dashboardGreeting").textContent =
+            `नमस्ते, ${buyerName} जी`;
+          const activeOrders = orders.filter((order) =>
+            ["pending", "accepted", "picking", "shipped"].includes(
+              order.order_status,
+            ),
+          );
+          document.getElementById("activeOrdersCount").textContent = String(
+            activeOrders.length,
+          );
+          const totalSpend = orders.reduce(
+            (sum, order) => sum + Number(order.total_amount || 0),
+            0,
+          );
+          document.getElementById("monthlySpend").textContent =
+            window.farmlinkBuyerData.money(totalSpend || 0);
+          document.getElementById("savedListingsCount").textContent = String(
+            listings.length,
+          );
+
+          const recentListings = document.getElementById("recentListingsList");
+          if (!listings.length) {
+            recentListings.innerHTML =
+              '<div class="alert alert-info">अभी कोई सक्रिय फसल उपलब्ध नहीं है।</div>';
+          } else {
+            recentListings.innerHTML = listings
+              .slice(0, 4)
+              .map(
+                (listing) => `
+                <a href="buyer-product-details.html?id=${encodeURIComponent(listing.id)}" class="crop-thumb" title="${listing.title}">
+                  <span style="font-size: 28px">${listing.emoji}</span>
+                </a>
+              `,
+              )
+              .join("");
+          }
+
+          const list = document.getElementById("activeOrdersList");
+          if (!activeOrders.length) {
+            list.innerHTML =
+              '<div class="alert alert-info">कोई सक्रिय ऑर्डर नहीं है।</div>';
+            return;
+          }
+
+          list.innerHTML = activeOrders
+            .slice(0, 3)
+            .map(
+              (order) => `
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line-soft);">
+                <div>
+                  <strong>ऑर्डर #${String(order.id).slice(0, 8)}</strong>
+                  <p style="margin: 2px 0 0; font-size: 12.5px">राशि: ${window.farmlinkBuyerData.money(order.total_amount || 0)}</p>
+                </div>
+                <a href="buyer-order-tracking.html?id=${order.id}" class="pill pill-info">${order.order_status === "delivered" ? "पूरा" : "ट्रैक करें"}</a>
+              </div>
+            `,
+            )
+            .join("");
+        } catch (error) {
+          console.error("Dashboard load failed", error);
+          document.getElementById("activeOrdersList").innerHTML =
+            '<div class="alert alert-info">ऑर्डर डेटा उपलब्ध नहीं है।</div>';
+        }
+      }
+
+      loadDashboard();
+    </script>
+  </body>
+</html>
