@@ -62,7 +62,7 @@
               color: var(--ink);
             "
           >
-            +91 98765 43210 ·
+            <span id="display-number">98765 43210</span> ·
             <a
               href="../../../../login.html"
               style="color: var(--primary-light); text-decoration: underline"
@@ -71,6 +71,7 @@
           </p>
 
           <form id="otpForm" novalidate>
+            <div id="recaptcha-container"></div>
             <div class="field">
               <label
                 style="
@@ -157,22 +158,74 @@
       </div>
     </div>
 
-    <script src="../../shared/assets/js/app.js"></script>
+    <script src="../../shared/assets/js/app.js?v=otp-demo-2"></script>
     <script src="../../shared/assets/js/ui.js"></script>
     <script>
       wireOtpInputs("#otpBoxes input");
+      const savedPhone = sessionStorage.getItem("farmlink_phone") || "";
+      const otpError = document.getElementById("otpErr");
+      document.getElementById("display-number").textContent =
+        savedPhone.replace(/^\+91/, "");
+      let otpRequest = (async () => {
+        await window.firebaseScriptReady;
+        if (!savedPhone) throw new Error("मोबाइल नंबर नहीं मिला।");
+        return requestFirebasePhoneOtp(savedPhone, "recaptcha-container");
+      })();
       document
         .getElementById("otpForm")
-        .addEventListener("submit", function (e) {
+        .addEventListener("submit", async function (e) {
           e.preventDefault();
           const vals = [...document.querySelectorAll("#otpBoxes input")].map(
             (i) => i.value,
           );
           const complete = vals.every((v) => v.length === 1);
-          const otpError = document.getElementById("otpErr");
           otpError.style.display = complete ? "none" : "flex";
           if (!complete) return;
-          window.location.href = "../onboarding/role-selection.html";
+
+          const submitButton = this.querySelector('button[type="submit"]');
+          submitButton.disabled = true;
+          submitButton.textContent = "सत्यापन हो रहा है...";
+          try {
+            await otpRequest;
+            await confirmFirebasePhoneOtp(vals.join(""));
+            const client = await window.firebaseReady;
+            const {
+              data: { user },
+            } = await client.auth.getUser();
+            if (!user) throw new Error("यूज़र नहीं मिला।");
+
+            const authenticatedPhone = user.phone || savedPhone;
+            let { data: profile, error } = await client
+              .from("users")
+              .select("role, verified")
+              .eq("id", user.id)
+              .maybeSingle();
+            if (error) throw error;
+            if (!profile && authenticatedPhone) {
+              ({ data: profile, error } = await client
+                .from("users")
+                .select("role, verified")
+                .eq("phone_number", authenticatedPhone)
+                .maybeSingle());
+              if (error) throw error;
+            }
+            if (!profile)
+              throw new Error("इस मोबाइल नंबर का प्रोफ़ाइल नहीं मिला।");
+
+            sessionStorage.setItem("farmlink_phone", authenticatedPhone);
+            if (profile.role === "buyer") {
+              window.location.href = "../buyer/buyer-dashboard.html";
+            } else if (profile.role === "farmer" || profile.role === "seller") {
+              window.location.href = "../seller/seller-dashboard.html";
+            } else {
+              window.location.href = "../onboarding/role-selection.html";
+            }
+          } catch (error) {
+            otpError.textContent = `⚠ OTP सत्यापन विफल: ${error.message}`;
+            otpError.style.display = "flex";
+            submitButton.disabled = false;
+            submitButton.textContent = "सत्यापित करें →";
+          }
         });
       let t = 30;
       const resend = document.getElementById("resendBtn");
@@ -187,6 +240,23 @@
         }
       }, 1000);
       resend.disabled = true;
+      resend.addEventListener("click", async () => {
+        resend.disabled = true;
+        try {
+          otpRequest = requestFirebasePhoneOtp(
+            savedPhone,
+            "recaptcha-container",
+          );
+          await otpRequest;
+          otpError.style.display = "none";
+          t = 30;
+          resend.textContent = "OTP फिर से भेजें (00:30)";
+        } catch (error) {
+          otpError.textContent = `⚠ OTP नहीं भेजा गया: ${error.message}`;
+          otpError.style.display = "flex";
+          resend.disabled = false;
+        }
+      });
 
       // Load Lucide Icons
       if (!window.lucide) {
