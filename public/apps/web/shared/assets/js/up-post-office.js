@@ -1,6 +1,8 @@
-/* Uttar Pradesh postal-location helper. Postal lookups go through the API so
- * the data.gov.in credential stays on the server. */
+/* Uttar Pradesh postal-location helper. Requests are proxied server-side. */
 (function () {
+  const RESOURCE_ID = "709e9d78-bf11-487d-93fd-d547d24cc0ef";
+  const ROOT = `https://api.data.gov.in/resource/${RESOURCE_ID}`;
+
   function unique(values) {
     return [
       ...new Set(values.filter(Boolean).map((value) => String(value).trim())),
@@ -11,31 +13,33 @@
     const pin = String(pincode || "").replace(/\D/g, "");
     if (!/^\d{6}$/.test(pin))
       throw new Error("6 अंकों का सही पिनकोड दर्ज करें।");
-    const response = await fetch(
-      `/api/locations/pincode?pin=${encodeURIComponent(pin)}`,
-    );
+
+    // Using Backend Proxy to avoid CORS and hide API Key
+    const apiBase = window.FARMLINK_API_BASE || "http://127.0.0.1:5000";
+    const response = await fetch(`${apiBase}/api/locations/pincode?pin=${pin}`);
+
     if (!response.ok)
       throw new Error("Postal location service अभी उपलब्ध नहीं है।");
-    const payload = await response.json();
-    const records = (payload.records || []).filter(
-      (record) =>
-        String(record.statename || "").toUpperCase() === "UTTAR PRADESH",
-    );
-    if (!records.length)
-      throw new Error(
-        "इस पिनकोड के लिए Uttar Pradesh में कोई Post Office नहीं मिला।",
-      );
+    const data = await response.json();
+    if (!data.ok) throw new Error(data.message || "पिनकोड नहीं मिला।");
+
+    const records = data.records;
     const preferredRecord =
       records.find(
         (record) => String(record.delivery || "").toLowerCase() === "delivery",
       ) || records[0];
+
     return {
       pincode: pin,
-      district: unique(records.map((record) => record.district))[0] || "",
+      district:
+        unique(
+          records.map((record) => record.districtname || record.district),
+        )[0] || "",
       postOffices: unique(records.map((record) => record.officename)),
       defaultPostOffice: preferredRecord?.officename || "",
       latitude: Number(preferredRecord?.latitude),
       longitude: Number(preferredRecord?.longitude),
+      state: preferredRecord?.statename || "Uttar Pradesh",
     };
   }
 

@@ -26,11 +26,14 @@
                 align-items: center;
               "
             >
+            <div style="position: relative; flex: 1; min-width: 200px">
               <input
                 type="text"
-                placeholder="🔍 फसल या स्थान खोजें..."
-                style="flex: 1; min-width: 200px"
+                placeholder="फसल या स्थान खोजें..."
+                style="width: 100%; padding-left: 42px"
               />
+              <i data-lucide="search" style="position: absolute; left: 14px; top: 12px; color: var(--ink-soft); width: 18px"></i>
+            </div>
               <select style="max-width: 160px">
                 <option>फसल प्रकार</option>
                 <option>अनाज</option>
@@ -96,9 +99,9 @@
                     <h3>${item.title} · ${item.grade}</h3>
                     <span class="badge-verified">✓ सत्यापित</span>
                   </div>
-                  <p style="margin: 2px 0 8px; font-size: 12.5px">
-                    📍 ${item.location} · ${item.quantityQuintalLabel} उपलब्ध
-                  </p>
+                  <p style="margin: 2px 0 8px; font-size: 12.5px; display: flex; align-items: center; gap: 6px">
+              <i data-lucide="map-pin" style="width: 14px"></i> ${item.location} · ${item.quantityQuintalLabel} उपलब्ध
+            </p>
                   <div class="mono" style="font-size: 17px; font-weight: 600; margin-bottom: 8px">
                     ${window.farmlinkBuyerData.money(item.pricePerKg * 100)}<span style="font-size: 12px; color: var(--ink-soft); font-weight: 400;">/क्विंटल</span>
                   </div>

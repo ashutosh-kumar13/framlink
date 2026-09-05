@@ -39,18 +39,35 @@
     const source = panel?.closest(".dash-card")?.querySelector(".card-link"); if (source) source.textContent = "Open‑Meteo लाइव";
   }
   async function refresh(location) {
-    if (!location) return false;
     showLoading();
     let point;
-    if (location.postal_code && window.FarmLinkPostOffice) {
-      const postal = await window.FarmLinkPostOffice.lookupPincode(location.postal_code);
-      if (Number.isFinite(postal.latitude) && Number.isFinite(postal.longitude)) point = postal;
+
+    // Direct geocoding via Open-Meteo (fast and reliable)
+    try {
+        const queryParts = [location?.village, location?.district, location?.state].filter(p => p && p.trim());
+        const query = queryParts.length > 0 ? queryParts.join(", ") : "Lucknow, Uttar Pradesh";
+        console.log(`[Weather] Geocoding: ${query}`);
+        point = await coordinates(query);
+    } catch (e) {
+        console.warn("Weather: Primary geocode failed, trying State only.");
+        try {
+            point = await coordinates(location?.state || "Uttar Pradesh");
+        } catch (inner) {
+            point = { latitude: 26.8, longitude: 80.9 }; // Final fallback
+        }
     }
-    if (!point) point = await coordinates(`${location.village || ""} ${location.district || ""} Uttar Pradesh India`.trim());
-    const url = new URL("https://api.open-meteo.com/v1/forecast");
-    Object.entries({ latitude:point.latitude, longitude:point.longitude, current:"temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m", daily:"weather_code,temperature_2m_max,temperature_2m_min", forecast_days:"5", timezone:"auto" }).forEach(([key, value]) => url.searchParams.set(key, value));
-    const response = await fetch(url); if (!response.ok) throw new Error("मौसम सेवा उपलब्ध नहीं है");
-    const data = await response.json(); update(data.current, data.daily); return true;
+
+    try {
+        const url = new URL("https://api.open-meteo.com/v1/forecast");
+        Object.entries({ latitude:point.latitude, longitude:point.longitude, current:"temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m", daily:"weather_code,temperature_2m_max,temperature_2m_min", forecast_days:"5", timezone:"auto" }).forEach(([key, value]) => url.searchParams.set(key, value));
+        const response = await fetch(url);
+        if (response.ok) {
+            const data = await response.json();
+            update(data.current, data.daily);
+            return true;
+        }
+    } catch (e) { console.error("Weather data fetch failed", e); }
+    return false;
   }
   window.FarmLinkWeather = { refresh };
   const style = document.createElement("style");

@@ -49,19 +49,19 @@
   function cropEmoji(title, category) {
     const value = (title || category || "").toLowerCase();
     const map = {
-      wheat: "🌾",
-      rice: "🌾",
-      mustard: "🌻",
-      maize: "🌽",
-      chana: "🫘",
-      pulse: "🫘",
-      gram: "🫘",
+      wheat: '<i data-lucide="wheat"></i>',
+      rice: '<i data-lucide="wheat"></i>',
+      mustard: '<i data-lucide="sprout"></i>',
+      maize: '<i data-lucide="wheat"></i>',
+      chana: '<i data-lucide="sprout"></i>',
+      pulse: '<i data-lucide="sprout"></i>',
+      gram: '<i data-lucide="sprout"></i>',
       potato: "🥔",
       onion: "🧅",
       vegetable: "🥬",
       fruits: "🍊",
-      spices: "🌶️",
-      grains: "🌾",
+      spices: '<i data-lucide="sprout"></i>',
+      grains: '<i data-lucide="wheat"></i>',
     };
 
     for (const key in map) {

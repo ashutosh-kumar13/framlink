@@ -77,11 +77,12 @@ header p {
     color: var(--text-muted);
 }
 
-.input-item input {
+.input-item input, .select-input {
     padding: 10px;
     border: 1px solid var(--border);
     border-radius: 4px;
     font-size: 1rem;
+    background: white;
 }
 
 .coverage-info {
@@ -191,62 +192,81 @@ th {
     display: none;
 }
 
-/* Debug Monitor Styles */
-#debug-monitor {
-    margin-top: 30px;
-    border: 1px solid #ccc;
-    background: #1e1e1e;
-    color: #d4d4d4;
-    font-family: 'Consolas', 'Monaco', monospace;
-    font-size: 0.85rem;
-}
-
-.debug-header {
+/* Live Price Section */
+.live-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #444;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border);
     padding-bottom: 10px;
-    margin-bottom: 10px;
 }
 
-.debug-header h3 {
+.live-header h2 {
+    font-size: 1.2rem;
+    color: var(--primary);
     margin: 0;
-    color: #569cd6;
-    font-size: 1rem;
 }
 
-.debug-logs {
-    max-height: 250px;
-    overflow-y: auto;
+.source-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.live-price-list {
     display: flex;
-    flex-direction: column-reverse; /* Newest logs at top */
+    flex-direction: column;
 }
 
-.log-entry {
-    padding: 4px 8px;
-    border-left: 3px solid #666;
-    margin-bottom: 4px;
-    white-space: pre-wrap;
-    word-break: break-all;
+.market-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
 }
 
-.log-entry.request { border-left-color: #ce9178; color: #ce9178; }
-.log-entry.response { border-left-color: #b5cea8; color: #b5cea8; }
-.log-entry.error { border-left-color: #f44747; color: #f44747; }
-.log-entry.system { border-left-color: #569cd6; color: #569cd6; }
+.market-row:last-child {
+    border-bottom: none;
+}
 
-.btn-secondary {
-    background: #444;
-    color: white;
-    border: none;
-    padding: 4px 10px;
+.market-row b {
+    flex: 1;
+    font-size: 1rem;
+    color: var(--text);
+}
+
+.market-row b small {
+    display: block;
+    font-weight: 400;
+    color: var(--text-muted);
     font-size: 0.75rem;
-    border-radius: 3px;
-    cursor: pointer;
 }
 
-.btn-secondary:hover { background: #555; }
+.market-row .rate {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.trend-indicator {
+    font-size: 0.9rem;
+    font-weight: 800;
+    min-width: 70px;
+    text-align: right;
+}
+
+.live-placeholder {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-muted);
+    font-style: italic;
+}
 
 footer {
     margin-top: 40px;

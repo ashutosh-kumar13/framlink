@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 import os
 from config import CLEAN_DATA_PATH, HISTORICAL_PLOT_PATH, MANDI, COMMODITY
 
@@ -9,13 +10,6 @@ def plot_historical_prices():
     if not os.path.exists(CLEAN_DATA_PATH):
         print(f"ERROR: Cleaned data not found at {CLEAN_DATA_PATH}. Run clean_data.py first.")
         return
-
-    try:
-        import matplotlib.pyplot as plt
-    except ImportError as error:
-        raise RuntimeError(
-            "Plotting requires the optional matplotlib package; install it before running this script."
-        ) from error
 
     # Load data
     df = pd.read_csv(CLEAN_DATA_PATH)

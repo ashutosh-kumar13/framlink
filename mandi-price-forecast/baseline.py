@@ -1,16 +1,8 @@
 import pandas as pd
 import numpy as np
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 import os
 from config import CLEAN_DATA_PATH, METRICS_PATH
-
-
-def mean_absolute_error(actual, predicted):
-    return float(np.mean(np.abs(np.asarray(actual) - np.asarray(predicted))))
-
-
-def root_mean_squared_error(actual, predicted):
-    difference = np.asarray(actual) - np.asarray(predicted)
-    return float(np.sqrt(np.mean(difference ** 2)))
 
 def evaluate_baseline():
     """
@@ -32,7 +24,7 @@ def evaluate_baseline():
     predicted = df['modal_price'][:-1].values # Shifted by 1
 
     mae = mean_absolute_error(actual, predicted)
-    rmse = root_mean_squared_error(actual, predicted)
+    rmse = np.sqrt(mean_squared_error(actual, predicted))
 
     report = f"""
 --- BASELINE MODEL EVALUATION (Persistence) ---

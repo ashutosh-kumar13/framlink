@@ -11,8 +11,13 @@ function mountPageShimmer() {
     try {
       if (window.authGuardReady) await window.authGuardReady;
       if (window.firebaseScriptReady) await window.firebaseScriptReady;
-    } catch { /* A page error renders its own error state after the shimmer. */ }
-    window.setTimeout(() => { shimmer.classList.add("is-hidden"); window.setTimeout(() => shimmer.remove(), 220); }, 260);
+    } catch {
+      /* A page error renders its own error state after the shimmer. */
+    }
+    window.setTimeout(() => {
+      shimmer.classList.add("is-hidden");
+      window.setTimeout(() => shimmer.remove(), 220);
+    }, 260);
   };
   dismiss();
 }
@@ -225,11 +230,19 @@ function wireOtpInputs(selector) {
 (function () {
   const s = document.createElement("script");
   s.src = new URL("firebase.js", document.currentScript.src).href;
-  window.firebaseScriptReady = new Promise((resolve) => {
-    s.onload = resolve;
-    s.onerror = resolve;
-  });
-  document.head.appendChild(s);
+  window.firebaseScriptReady = async () => {
+    try {
+      const apiBase = window.FARMLINK_API_BASE || "http://127.0.0.1:5000";
+      const response = await fetch(`${apiBase}/api/config`);
+      const config = await response.json();
+      window.FARMLINK_FIREBASE_CONFIG = config.firebase || {};
+    } catch {}
+    await new Promise((resolve) => {
+      s.onload = resolve;
+      s.onerror = resolve;
+      document.head.appendChild(s);
+    });
+  };
 })();
 
 // Every page under apps/web/pages is protected.  The login screen is the only

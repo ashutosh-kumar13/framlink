@@ -19,23 +19,34 @@
             बोलकर पूछें — जैसे "आज गेहूं का भाव क्या है?"
           </p>
 
-          <div class="card" style="padding: 12px; margin-bottom: 18px">
-            <iframe
-              title="FarmLink AI वॉइस सहायक"
-              src="https://agent.retellai.com/orb/agent_6acee3e553c53f26ba20848596?token=04362f183e598a1cfae36f8a5c62270b"
-              allow="microphone; autoplay"
-              loading="lazy"
+          <div
+            class="card"
+            style="text-align: center; padding: 36px 20px; margin-bottom: 18px"
+          >
+            <button
+              id="micBtn"
               style="
-                display: block;
-                width: 100%;
-                height: 430px;
-                border: 0;
-                border-radius: var(--radius-m);
-                background: var(--soil-tint);
+                width: 84px;
+                height: 84px;
+                border-radius: 50%;
+                background: var(--soil);
+                border: none;
+                color: var(--turmeric);
+                font-size: 30px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 14px;
               "
-            ></iframe>
-            <p class="hint" style="margin: 10px 4px 0; text-align: center">
-              FarmLink AI से हिंदी, English या अपनी क्षेत्रीय भाषा में बात करें
+            >
+              ◉
+            </button>
+            <p id="micStatus" style="margin: 0; font-weight: 600">
+              बोलने के लिए दबाएँ · Tap to speak
+            </p>
+            <p class="hint" style="margin-top: 4px">
+              हिंदी, English या अपनी क्षेत्रीय भाषा में बोलें
             </p>
           </div>
 
@@ -113,6 +124,14 @@
     <script src="../../shared/assets/js/ui.js"></script>
     <script>
       initShell("seller", "voice", "वॉइस सहायक");
+      let listening = false;
+      document.getElementById("micBtn").addEventListener("click", function () {
+        listening = !listening;
+        this.style.background = listening ? "var(--terracotta)" : "var(--soil)";
+        document.getElementById("micStatus").textContent = listening
+          ? "🎙 सुन रहा हूँ..."
+          : "बोलने के लिए दबाएँ · Tap to speak";
+      });
     </script>
   </body>
 </html>

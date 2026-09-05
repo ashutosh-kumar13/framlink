@@ -1,11 +1,12 @@
 import os
-import time
-
-import pandas as pd
 import requests
+import pandas as pd
+import time
+from datetime import datetime
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from config import API_KEY, DAILY_RESOURCE_ID, RESOURCE_ID, RAW_DATA_PATH, MAX_RECORDS
+from config import API_KEY, RAW_DATA_PATH
+from weather_api import get_coordinates, get_historical_weather
 
 def title_case(value: str) -> str:
     if not value: return ""
@@ -13,16 +14,7 @@ def title_case(value: str) -> str:
     words = value.strip().split()
     result = []
     for word in words:
-        if "(" in word and ")" in word:
-            parts = word.replace("(", " (").replace(")", ") ").split()
-            formatted_parts = []
-            for p in parts:
-                if p.startswith("("):
-                    formatted_parts.append(f"({p[1:-1].capitalize()})")
-                else:
-                    formatted_parts.append(p.capitalize())
-            result.append("".join(formatted_parts))
-        elif word.upper() in acronyms:
+        if word.upper() in acronyms:
             result.append(word.upper())
         else:
             result.append(word.capitalize())
@@ -41,99 +33,131 @@ def get_session():
     )))
     return session
 
-def fetch_mandi_data(state, district, market, commodity, variety=None, limit=None):
+def fetch_mandi_data(state, district, market, commodity, variety=None, target_records=2000, save_path=None, fetch_weather=True):
     """
-    Enhanced fetcher with optional limit for quick updates.
+    Fetches historical data with correct filtering and deep pagination.
     """
+    print(f"\n[STEP 1: FETCHING] {commodity} in {market}, {district}, {state}...")
     api_key = os.getenv("DATA_GOV_API_KEY", API_KEY)
-    if not api_key:
-        return False, "DATA_GOV_API_KEY is not configured."
     session = get_session()
 
-    resources = [RESOURCE_ID, DAILY_RESOURCE_ID]
-    fetch_limit = max(1, limit or MAX_RECORDS)
+    target_path = save_path if save_path else RAW_DATA_PATH
 
-    # Handle market name variants (bare name vs APMC)
-    market_variants = [market]
-    if "APMC" in market:
-        market_variants.append(market.replace("APMC", "").strip())
-    elif "APMC" not in market:
-        market_variants.append(f"{market} APMC")
+    start_time = time.time()
 
-    # Deduplicate variants
-    market_variants = list(dict.fromkeys(market_variants))
+    # Resource 1: Historical (Used for trends and residuals)
+    # Resource 2: Daily (Used for latest price validation)
+    resources = [
+        {"id": "35985678-0d79-46b4-9ed6-6f13308a1d24", "type": "historical"},
+        {"id": "9ef84268-d588-465a-a308-a864a43d0070", "type": "daily"}
+    ]
 
-    all_raw_records = []
+    all_records = []
 
-    for rid in resources:
-        for m_variant in market_variants:
-            print(f"Checking Resource {rid} for Market variant: '{m_variant}'...")
-            offset = 0
-            page_size = 50
-            source_count = 0
+    for res in resources:
+        rid = res["id"]
+        rtype = res["type"]
+        print(f"  > Connecting to {rtype} resource: {rid}")
 
-            is_historical = rid.startswith("3598")
-            s_key = "filters[State]" if is_historical else "filters[state]"
-            m_key = "filters[Market]" if is_historical else "filters[market]"
-            c_key = "filters[Commodity]" if is_historical else "filters[commodity]"
-            v_key = "filters[Variety]" if is_historical else "filters[variety]"
-            d_key = "sort[Arrival_Date]" if is_historical else "sort[arrival_date]"
+        # Resource specific keys
+        if rtype == "historical":
+            state_key, district_key, market_key = "filters[State]", "filters[District]", "filters[Market]"
+            commodity_key, variety_key, sort_key = "filters[Commodity]", "filters[Variety]", "sort[Arrival_Date]"
+        else:
+            state_key, district_key, market_key = "filters[state]", "filters[district]", "filters[market]"
+            commodity_key, variety_key, sort_key = "filters[commodity]", "filters[variety]", "sort[arrival_date]"
 
+        offset, limit, fetched_for_resource = 0, 100, 0
+        # For historical, we want as much as possible up to target
+        max_to_fetch = target_records if rtype == "historical" else 100
+
+        while fetched_for_resource < max_to_fetch:
             params = {
-                "api-key": api_key, "format": "json", "limit": page_size,
-                d_key: "desc",
-                s_key: title_case(state),
-                m_key: title_case(m_variant),
-                c_key: title_case(commodity),
+                "api-key": api_key, "format": "json", "limit": limit, "offset": offset,
+                sort_key: "desc",
+                state_key: title_case(state),
+                district_key: title_case(district),
+                market_key: title_case(market),
+                commodity_key: title_case(commodity)
             }
-            if variety: params[v_key] = title_case(variety)
+            if variety: params[variety_key] = title_case(variety)
 
             try:
-                while source_count < fetch_limit:
-                    params["offset"] = offset
-                    # Increased timeout for potentially slow gov server
-                    response = session.get(f"https://api.data.gov.in/resource/{rid}", params=params, timeout=120)
+                # Mask API Key in logs for security
+                masked_url = f"https://api.data.gov.in/resource/{rid}?api-key=HIDDEN&format=json&limit={limit}&offset={offset}"
+                for k, v in params.items():
+                    if k != 'api-key': masked_url += f"&{k}={v}"
+                print(f"    [API CALL] {masked_url}")
 
-                    if response.status_code == 200:
-                        data = response.json()
-                        records = data.get("records", [])
-                        if not records:
-                            break
+                response = session.get(f"https://api.data.gov.in/resource/{rid}", params=params, timeout=30)
+                if response.status_code == 200:
+                    data = response.json()
+                    records = data.get("records", [])
+                    if not records: break
 
-                        all_raw_records.extend(records)
-                        source_count += len(records)
-                        offset += page_size
-                        if len(records) < page_size:
-                            break
-                        time.sleep(0.2)
-                    else:
-                        break
+                    all_records.extend(records)
+                    fetched_for_resource += len(records)
+                    offset += limit
 
-                print(f"  Done: Fetched {source_count} records from this variant.")
+                    # Stop if we hit 2022 data (we want 2023 onwards)
+                    last_date_str = records[-1].get("Arrival_Date") or records[-1].get("arrival_date")
+                    if last_date_str:
+                        try:
+                            # Handle both formats dd/mm/yyyy and yyyy-mm-dd
+                            if '/' in last_date_str:
+                                last_year = int(last_date_str.split('/')[-1])
+                            else:
+                                last_year = int(last_date_str.split('-')[0])
+
+                            if last_year < 2023:
+                                print(f"    - Reached year {last_year}. Stopping fetch.")
+                                break
+                        except: pass
+
+                    print(f"    - Success: {len(records)} records (Total: {fetched_for_resource})")
+                    if len(records) < limit: break
+                    time.sleep(0.2)
+                else:
+                    break
             except Exception as e:
-                print(f"  Warning: Resource {rid} failed for variant {m_variant}: {e}")
-                continue
+                print(f"    - Connection Error: {e}")
+                break
 
-    if all_raw_records:
-        df = pd.DataFrame(all_raw_records)
-        df.columns = [c.lower() for c in df.columns]
-        required_columns = {"arrival_date", "market", "commodity", "variety"}
-        if not required_columns.issubset(df.columns):
-            missing = ", ".join(sorted(required_columns - set(df.columns)))
-            return False, f"API response is missing columns: {missing}"
+    duration = time.time() - start_time
+    if all_records:
+        df = pd.DataFrame(all_records)
+        df.columns = [c.lower().replace(" ", "_") for c in df.columns]
+        print(f"[FETCH COMPLETE] Total records found: {len(df)} | Time: {time.time() - start_time:.2f}s")
+        os.makedirs(os.path.dirname(target_path), exist_ok=True)
+        df.to_csv(target_path, index=False)
 
-        # Deduplicate across variants and resources
-        initial_len = len(df)
-        df = df.drop_duplicates(subset=['arrival_date', 'market', 'commodity', 'variety']).reset_index(drop=True)
-        print(f"MERGE COMPLETE: Final dataset has {len(df)} unique records (Removed {initial_len - len(df)} duplicates).")
+        # FETCH HISTORICAL WEATHER
+        if fetch_weather:
+            try:
+                # Get data date range
+                df['date_dt'] = pd.to_datetime(df['arrival_date'], dayfirst=True, errors='coerce')
+                valid_dates = df.dropna(subset=['date_dt'])
+                if not valid_dates.empty:
+                    start_d = valid_dates['date_dt'].min().strftime('%Y-%m-%d')
+                    end_d = valid_dates['date_dt'].max().strftime('%Y-%m-%d')
 
-        os.makedirs(os.path.dirname(RAW_DATA_PATH), exist_ok=True)
-        df.to_csv(RAW_DATA_PATH, index=False)
-        return True, f"Success: {len(df)} records merged."
+                    lat, lon = get_coordinates(market, district, state)
+                    if lat and lon:
+                        weather_data = get_historical_weather(lat, lon, start_d, end_d)
+                        if weather_data:
+                            w_path = target_path.replace("raw_", "weather_")
+                            pd.DataFrame(weather_data).to_csv(w_path, index=False)
+                            print(f"  > Weather data saved to {w_path}")
+            except Exception as we:
+                print(f"  > Weather fetch failed (skipping): {we}")
 
-    return False, "No data found for this selection or its variants."
+        return True, f"Success: {len(df)} records fetched."
+
+    print(f"[FETCH FAILED] No records returned from API. KEEPING EXISTING CACHE.")
+    return False, "No data found for this selection."
 
 if __name__ == "__main__":
     from config import STATE, DISTRICT, MANDI, COMMODITY
-    success, msg = fetch_mandi_data(STATE, DISTRICT, MANDI, COMMODITY)
+    # Default test case: Lucknow -> Malihabad -> Rice (Actually often Paddy)
+    success, msg = fetch_mandi_data("Uttar Pradesh", "Lucknow", "Malihabad", "Rice")
     print(msg)

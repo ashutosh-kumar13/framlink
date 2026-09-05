@@ -8,11 +8,24 @@ function mountPageShimmer() {
   shimmer.innerHTML = `<div class="page-shimmer-side"><div class="sh-line" style="width:70%;height:28px"></div>${Array.from({ length: 8 }, () => '<div class="sh-nav"></div>').join("")}</div><div class="page-shimmer-main"><div class="sh-line" style="width:180px;height:14px"></div><div class="sh-line" style="width:300px;height:32px;margin-top:13px"></div><div class="page-shimmer-row"><div class="sh-card"></div><div class="sh-card"></div><div class="sh-card"></div></div><div class="page-shimmer-row"><div class="sh-card" style="min-height:240px"></div><div class="sh-card" style="min-height:240px"></div></div></div>`;
   document.body.prepend(shimmer);
   const dismiss = async () => {
+    // Safety timeout for shimmer dismissal
+    const safetyTimeout = setTimeout(() => {
+      shimmer.classList.add("is-hidden");
+      setTimeout(() => shimmer.remove(), 220);
+    }, 5000);
+
     try {
       if (window.authGuardReady) await window.authGuardReady;
       if (window.firebaseScriptReady) await window.firebaseScriptReady;
-    } catch { /* A page error renders its own error state after the shimmer. */ }
-    window.setTimeout(() => { shimmer.classList.add("is-hidden"); window.setTimeout(() => shimmer.remove(), 220); }, 260);
+    } catch {
+      /* A page error renders its own error state after the shimmer. */
+    }
+
+    clearTimeout(safetyTimeout);
+    window.setTimeout(() => {
+      shimmer.classList.add("is-hidden");
+      window.setTimeout(() => shimmer.remove(), 220);
+    }, 260);
   };
   dismiss();
 }
@@ -112,6 +125,37 @@ async function initShell(role, activeKey, title) {
     )
     .join("");
 
+  // Fetch dynamic user data for sidebar
+  let userName = role === "seller" ? "किसान" : "खरीदार";
+  let isKycVerified = false;
+  let userGender = "male"; // default
+
+  try {
+    const { client, user } = await getCurrentUser();
+    if (user) {
+      const [{ data: dbUser }, { data: profile }] = await Promise.all([
+        client
+          .from("users")
+          .select("full_name")
+          .eq("id", user.id)
+          .maybeSingle(),
+        client
+          .from("farmer_profiles")
+          .select("identity_verified, gender")
+          .eq("user_id", user.id)
+          .maybeSingle(),
+      ]);
+      if (dbUser?.full_name) userName = dbUser.full_name;
+      if (profile?.identity_verified) isKycVerified = true;
+      if (profile?.gender) userGender = profile.gender;
+    }
+  } catch (e) {
+    console.warn("Sidebar data fetch failed", e);
+  }
+
+  const avatarSeed = `${userGender}_${userName}`;
+  const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(avatarSeed)}`;
+
   const sidebar = document.createElement("div");
   sidebar.innerHTML = `
     <div class="sidebar-scrim" id="scrim"></div>
@@ -132,11 +176,13 @@ async function initShell(role, activeKey, title) {
       <div class="sidebar-foot-profile">
         <div class="profile-card-mini">
           <div class="avatar-mini">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ramesh" alt="Ramesh Patil" />
+            <img src="${avatarUrl}" alt="${userName}" />
           </div>
           <div class="profile-details-mini">
-            <a href="seller-profile.html" class="profile-name-mini">रमेश पाटिल &nbsp;<strong>&rsaquo;</strong></a>
-            <span class="kyc-badge-mini"><span class="dot-green"></span> KYC सत्यापित</span>
+            <a href="seller-profile.html" class="profile-name-mini">${userName} &nbsp;<strong>&rsaquo;</strong></a>
+            <span class="kyc-badge-mini">
+                ${isKycVerified ? '<span class="dot-green"></span> KYC सत्यापित' : '<span class="dot" style="background:#f59e0b"></span> सत्यापन लंबित'}
+            </span>
           </div>
         </div>
       </div>
@@ -225,11 +271,19 @@ function wireOtpInputs(selector) {
 (function () {
   const s = document.createElement("script");
   s.src = new URL("firebase.js", document.currentScript.src).href;
-  window.firebaseScriptReady = new Promise((resolve) => {
-    s.onload = resolve;
-    s.onerror = resolve;
-  });
-  document.head.appendChild(s);
+  window.firebaseScriptReady = async () => {
+    try {
+      const apiBase = window.FARMLINK_API_BASE || "http://127.0.0.1:5000";
+      const response = await fetch(`${apiBase}/api/config`);
+      const config = await response.json();
+      window.FARMLINK_FIREBASE_CONFIG = config.firebase || {};
+    } catch {}
+    await new Promise((resolve) => {
+      s.onload = resolve;
+      s.onerror = resolve;
+      document.head.appendChild(s);
+    });
+  };
 })();
 
 // Every page under apps/web/pages is protected.  The login screen is the only

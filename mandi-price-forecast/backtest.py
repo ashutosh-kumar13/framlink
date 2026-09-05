@@ -1,29 +1,17 @@
 import pandas as pd
 import numpy as np
+from xgboost import XGBRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+import matplotlib.pyplot as plt
 import os
-from importlib import import_module
 from features import create_features
-from config import CLEAN_DATA_PATH
-
-
-def mean_absolute_error(actual, predicted):
-    return float(np.mean(np.abs(np.asarray(actual) - np.asarray(predicted))))
+from config import CLEAN_DATA_PATH, BACKTEST_PLOT_PATH
 
 def walk_forward_backtest(df, horizon=30, min_train_size=15, step=10):
     """
     Simulates real-world deployment.
     Reduced min_train_size to 15 for the prototype to handle sparse mandi data.
     """
-    if horizon < 1 or min_train_size < 2 or step < 1:
-        raise ValueError("horizon, min_train_size, and step must be positive")
-
-    try:
-        XGBRegressor = import_module("xgboost").XGBRegressor
-    except ImportError as error:
-        raise RuntimeError(
-            "Backtesting requires the optional xgboost package; install it from requirements-backtest.txt."
-        ) from error
-
     df_feat = create_features(df)
 
     # If the feature creation removed too many rows (due to lags),
