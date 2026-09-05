@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Mandi Price Forecast</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i data-lucide="leaf"></i> AI Mandi Price Forecasting</h1>
+            <p>Enter details to predict mandi prices for the next 30 days</p>
+        </header>
+
+        <section class="selection-card">
+            <div class="input-grid">
+                <div class="input-item">
+                    <label for="state">राज्य (State)</label>
+                    <input type="text" id="state" placeholder="जैसे: Uttar Pradesh">
+                </div>
+                <div class="input-item">
+                    <label for="district">जिला (District)</label>
+                    <input type="text" id="district" placeholder="जैसे: Lucknow">
+                </div>
+                <div class="input-item">
+                    <label for="mandi">मंडी (Market)</label>
+                    <input type="text" id="mandi" placeholder="जैसे: Malihabad">
+                </div>
+                <div class="input-item">
+                    <label for="commodity">फसल (Commodity)</label>
+                    <input type="text" id="commodity" placeholder="जैसे: Wheat">
+                </div>
+                <div class="input-item">
+                    <label for="duration">अवधि (Duration)</label>
+                    <select id="duration" class="select-input">
+                        <option value="7">Next 7 Days</option>
+                        <option value="15">Next 15 Days</option>
+                        <option value="30" selected>Next 30 Days</option>
+                    </select>
+                </div>
+            </div>
+            <button id="predict-btn" class="btn-primary">पूर्वानुमान देखें (Predict)</button>
+            <p id="status-msg" class="status-msg"></p>
+        </section>
+
+        <section id="live-prices-section" class="card">
+            <div class="live-header">
+                <div>
+                    <h2>बाज़ार भाव <small style="font-weight:400;color:var(--text-muted)">(आज का)</small></h2>
+                    <div id="dashboard-weather" style="font-size: 11px; color: #15803d; font-weight: 600; margin-top: 4px;">🌤️ मौसम: लोड हो रहा है...</div>
+                </div>
+                <span id="mandi-source-badge" class="source-badge">खोज रहे हैं...</span>
+            </div>
+            <div id="live-price-container" class="live-price-list">
+                <div class="live-placeholder">Loading prices...</div>
+            </div>
+        </section>
+
+        <main id="results-area" class="hidden">
+            <div class="dashboard-grid">
+                <div class="card stat-card">
+                    <h3>अंतिम मंडी भाव (Latest Price)</h3>
+                    <p class="price-val" id="latest-price">₹--</p>
+                    <small id="variety-label">प्रकार (Variety): --</small>
+                </div>
+                <div class="card stat-card">
+                    <h3>अनुमानित रुझान (Expected Trend)</h3>
+                    <p class="trend-val" id="trend-val">--</p>
+                </div>
+                <div class="card stat-card">
+                    <h3>मॉडल सटीकता (Accuracy)</h3>
+                    <p class="accuracy-val"><span id="mae-val">--%</span></p>
+                    <small>स्रोत: <span id="model-name">--</span></small>
+                </div>
+                <div class="card stat-card" id="weather-card">
+                    <h3>मौसम का प्रभाव (Weather Impact)</h3>
+                    <p id="weather-desc">डेटा लोड हो रहा है...</p>
+                    <small id="weather-precip">बारिश: -- mm</small>
+                </div>
+
+                <div class="card chart-card">
+                    <h3>Price Forecast (Next 30 Days)</h3>
+                    <p id="coverage-info" class="coverage-info"></p>
+                    <div style="height: 400px; position: relative;">
+                        <canvas id="forecastChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card table-card">
+                    <h3>Detailed Forecast Table</h3>
+                    <div class="table-wrapper">
+                        <table id="forecast-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Predicted Price</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p class="disclaimer">
+                <strong>Disclaimer:</strong> Forecasts are estimates based on historical market data.
+                Actual prices may differ due to unexpected market conditions.
+            </p>
+        </footer>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+- [x] Implement `fetch_live_mandi_rates` in backend (`app.py`)
+- [x] Update `/api/market/details` to include `live_rates` in response (`app.py`)
+- [x] Remove redundant frontend OGD fetch from Mandi AI dashboard (`script.js`)
+- [x] Update Mandi AI dashboard to use backend `live_rates` (`script.js`)
+- [x] Add "Nearby Market Rates" section to Seller AI Insights (`seller-ai-insights.html`)
+- [x] Sync Accuracy (100-MAPE) and Weather details in Seller AI Insights (`seller-ai-insights.html`)
+- [x] Verify both pages show identical data for same search

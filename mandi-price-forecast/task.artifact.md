@@ -1,0 +1,5 @@
+- [ ] Add Recency Validation and APMC heuristic to `app.py`
+- [ ] Implement District-level fallback for stale data in `app.py`
+- [ ] Add Year to chart labels in `mandi-price-forecast/static/script.js`
+- [ ] Add Year to chart labels in `public/apps/web/pages/seller/seller-ai-insights.html`
+- [ ] Verify that Lucknow Wheat now shows Sept 2026 data
