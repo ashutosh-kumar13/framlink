@@ -3,7 +3,7 @@
  *
  * 1. Create a Firebase web app.
  * 2. Enable Phone Authentication, Cloud Firestore and Firebase Storage.
- * 3. Paste its public web configuration below.
+ * 3. Configure the Firebase web values in the server environment.
  *
  * Until then, the prototype stays usable with browser-local demo data. The
  * Firebase config is public by design; protect data using Firestore and Storage
@@ -413,6 +413,17 @@ window.firebaseReady = new Promise((resolve) => {
     resolve(window.firebaseClient);
     return;
   }
+
+  // Timeout to fallback to demo mode if Firebase scripts take too long
+  const timeoutId = setTimeout(() => {
+    console.warn(
+      "Firebase scripts taking too long to load. Falling back to Demo Mode.",
+    );
+    window.firebaseMode = "demo";
+    window.firebaseClient = demoAdapter();
+    resolve(window.firebaseClient);
+  }, 4000);
+
   const scripts = [
     "https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js",
     "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js",
@@ -426,15 +437,26 @@ window.firebaseReady = new Promise((resolve) => {
     script.onload = () => {
       loaded += 1;
       if (loaded === scripts.length) {
-        firebase.initializeApp(FIREBASE_CONFIG);
-        window.firebaseClient = firestoreAdapter(firebase);
-        resolve(window.firebaseClient);
+        clearTimeout(timeoutId);
+        try {
+          firebase.initializeApp(FIREBASE_CONFIG);
+          window.firebaseClient = firestoreAdapter(firebase);
+          resolve(window.firebaseClient);
+        } catch (e) {
+          console.warn("Firebase Init failed:", e);
+          window.firebaseClient = demoAdapter();
+          resolve(window.firebaseClient);
+        }
       }
     };
     script.onerror = () => {
-      window.firebaseMode = "demo";
-      window.firebaseClient = demoAdapter();
-      resolve(window.firebaseClient);
+      loaded += 1;
+      if (loaded === scripts.length) {
+        clearTimeout(timeoutId);
+        window.firebaseMode = "demo";
+        window.firebaseClient = demoAdapter();
+        resolve(window.firebaseClient);
+      }
     };
     document.head.appendChild(script);
   });
