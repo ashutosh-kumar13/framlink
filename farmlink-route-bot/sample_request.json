@@ -1,0 +1,87 @@
+{
+  "depot": {
+    "name": "Pune FPO Hub",
+    "latitude": 18.5204,
+    "longitude": 73.8567,
+    "elevation_m": 560,
+    "state_code": "MH"
+  },
+  "vehicles": [
+    {
+      "id": "truck-1",
+      "capacity_kg": 700
+    },
+    {
+      "id": "truck-2",
+      "capacity_kg": 450
+    }
+  ],
+  "orders": [
+    {
+      "id": "ORD-101",
+      "crop": "Tomato",
+      "quantity_kg": 240,
+      "perishability": 5,
+      "storage_temp_c": 12,
+      "promised_delivery_hours": 12,
+      "pickup": {
+        "name": "Ramesh Farm",
+        "latitude": 18.6279,
+        "longitude": 73.7932,
+        "elevation_m": 650,
+        "state_code": "MH"
+      },
+      "delivery": {
+        "name": "Kothrud Retailer",
+        "latitude": 18.5074,
+        "longitude": 73.8077,
+        "elevation_m": 580,
+        "state_code": "MH"
+      }
+    },
+    {
+      "id": "ORD-102",
+      "crop": "Onion",
+      "quantity_kg": 300,
+      "perishability": 2,
+      "storage_temp_c": 15,
+      "promised_delivery_hours": 24,
+      "pickup": {
+        "name": "Savitri Farm",
+        "latitude": 18.5447,
+        "longitude": 73.9178,
+        "elevation_m": 600,
+        "state_code": "MH"
+      },
+      "delivery": {
+        "name": "Hadapsar Restaurant",
+        "latitude": 18.5018,
+        "longitude": 73.9260,
+        "elevation_m": 570,
+        "state_code": "MH"
+      }
+    },
+    {
+      "id": "ORD-103",
+      "crop": "Strawberry",
+      "quantity_kg": 150,
+      "perishability": 5,
+      "storage_temp_c": 4,
+      "promised_delivery_hours": 8,
+      "pickup": {
+        "name": "Priya Organic Farms",
+        "latitude": 18.4890,
+        "longitude": 73.8234,
+        "elevation_m": 520,
+        "state_code": "MH"
+      },
+      "delivery": {
+        "name": "Amanora Mall Food Court",
+        "latitude": 18.5640,
+        "longitude": 73.8900,
+        "elevation_m": 590,
+        "state_code": "MH"
+      }
+    }
+  ]
+}

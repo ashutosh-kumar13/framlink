@@ -1,9 +1,12 @@
 .env
 .env.*
 !.env.example
+.vercel
+node_modules/
 __pycache__/
 *.py[cod]
 .venv/
 venv/
 .idea/
 .artifacts/
+mandi-price-forecast/.env
