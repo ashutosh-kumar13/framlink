@@ -298,28 +298,10 @@
           if (valid) {
             const submitButton = this.querySelector('button[type="submit"]');
             submitButton.disabled = true;
-            try {
-              const phone = `+91${mobile.value.trim()}`;
-              console.info("[FarmLink Auth] Requesting Firebase test OTP", { phone });
-              submitButton.textContent = "OTP भेजा जा रहा है...";
-              await requestFirebasePhoneOtp(phone, "recaptcha-container");
-              console.info("[FarmLink Auth] OTP request accepted by Firebase", { phone });
-              sessionStorage.setItem("farmlink_phone", phone);
-              document.getElementById("display-number").textContent = mobile.value.trim();
-              document.getElementById("step-phone").style.display = "none";
-              document.getElementById("step-otp").style.display = "block";
-              startOtpTimer();
-              submitButton.disabled = false;
-              submitButton.textContent = "OTP के साथ आगे बढ़ें →";
-              return;
-            } catch (phoneAuthError) {
-              console.error("Firebase phone OTP failed:", phoneAuthError);
-              err.textContent = `⚠ OTP नहीं भेजा गया: ${phoneAuthError.message}`;
-              err.style.display = "flex";
-              submitButton.disabled = false;
-              submitButton.textContent = "OTP के साथ आगे बढ़ें →";
-              return;
-            }
+            const phone = `+91${mobile.value.trim()}`;
+            sessionStorage.setItem("farmlink_phone", phone);
+            window.location.href = "public/apps/web/pages/auth/otp.html";
+            return;
             try {
               const withTimeout = (promise, message) =>
                 Promise.race([
@@ -388,7 +370,9 @@
                     "Firebase Phone Auth timed out. Check the test number and Firebase Authentication settings.",
                   );
               if (error)
-                throw new Error(`Firebase authentication failed: ${error.message}`);
+                throw new Error(
+                  `Firebase authentication failed: ${error.message}`,
+                );
               if (!data.user)
                 throw new Error("Firebase did not return a user.");
               sessionStorage.setItem("farmlink_phone", phone);
@@ -420,11 +404,10 @@
               startOtpTimer();
             } catch (error) {
               console.error("Mock login/session setup failed:", error);
-              const message =
-                error.message.includes("phone")
-                  ? "⚠ Firebase Phone Authentication check करें और configured test OTP से फिर कोशिश करें।"
-                  : error.message.includes("users_role_check")
-                    ? "⚠ Firebase Firestore setup बाकी है। Console में Cloud Firestore database बनाएँ और Security Rules लागू करें।"
+              const message = error.message.includes("phone")
+                ? "⚠ Firebase Phone Authentication check करें और configured test OTP से फिर कोशिश करें।"
+                : error.message.includes("users_role_check")
+                  ? "⚠ Firebase Firestore setup बाकी है। Console में Cloud Firestore database बनाएँ और Security Rules लागू करें।"
                   : error.message.includes("row-level security")
                     ? "⚠ Firebase Firestore Security Rules missing हैं। Rules publish करके फिर कोशिश करें।"
                     : `⚠ डेटा सेव नहीं हुआ: ${error.message}`;
@@ -453,13 +436,21 @@
           if (dbError || !dbUser) return;
 
           if (dbUser.role === "buyer") {
-            window.location.replace("apps/web/pages/buyer/buyer-dashboard.html");
+            window.location.replace(
+              "apps/web/pages/buyer/buyer-dashboard.html",
+            );
           } else if (dbUser.role === "farmer" && dbUser.verified) {
-            window.location.replace("apps/web/pages/seller/seller-dashboard.html");
+            window.location.replace(
+              "apps/web/pages/seller/seller-dashboard.html",
+            );
           } else if (dbUser.role === "farmer") {
-            window.location.replace("apps/web/pages/onboarding/verification-pending.html");
+            window.location.replace(
+              "apps/web/pages/onboarding/verification-pending.html",
+            );
           } else {
-            window.location.replace("apps/web/pages/onboarding/role-selection.html");
+            window.location.replace(
+              "apps/web/pages/onboarding/role-selection.html",
+            );
           }
         } catch (error) {
           console.warn("Cached session restore skipped:", error);
@@ -499,11 +490,14 @@
             console.info("[FarmLink Auth] Verifying OTP", {
               phone: sessionStorage.getItem("farmlink_phone"),
             });
+            await window.firebaseScriptReady;
             await confirmFirebasePhoneOtp(vals.join(""));
             phoneVerified = true;
             console.info("[FarmLink Auth] OTP verified successfully");
             const client = await window.firebaseReady;
-            const { data: { user } } = await client.auth.getUser();
+            const {
+              data: { user },
+            } = await client.auth.getUser();
             if (!user) throw new Error("यूज़र नहीं मिला।");
 
             const firestoreTimeout = (promise, label) =>
@@ -511,12 +505,15 @@
                 promise,
                 new Promise((_, reject) =>
                   setTimeout(
-                    () => reject(new Error(`${label} timed out after 5 seconds.`)),
+                    () =>
+                      reject(new Error(`${label} timed out after 5 seconds.`)),
                     5000,
                   ),
                 ),
               ]);
-            console.info("[FarmLink Auth] Looking up Firestore user profile", { userId: user.id });
+            console.info("[FarmLink Auth] Looking up Firestore user profile", {
+              userId: user.id,
+            });
             const { data: dbUser, error: dbError } = await firestoreTimeout(
               client
                 .from("users")
@@ -529,11 +526,15 @@
             if (dbError) throw dbError;
 
             if (!dbUser) {
-              console.info("[FarmLink Auth] Creating initial Firestore user profile", { userId: user.id });
+              console.info(
+                "[FarmLink Auth] Creating initial Firestore user profile",
+                { userId: user.id },
+              );
               const { error: createUserError } = await firestoreTimeout(
                 client.from("users").insert({
                   id: user.id,
-                  phone_number: user.phone || sessionStorage.getItem("farmlink_phone"),
+                  phone_number:
+                    user.phone || sessionStorage.getItem("farmlink_phone"),
                   full_name: "नया उपयोगकर्ता",
                   role: "pending",
                   verified: true,
@@ -541,34 +542,52 @@
                 "Firestore user creation",
               );
               if (createUserError) throw createUserError;
-              console.info("[FarmLink Auth] Initial Firestore user profile created");
+              console.info(
+                "[FarmLink Auth] Initial Firestore user profile created",
+              );
             }
 
             if (dbUser && dbUser.role === "buyer") {
               console.info("[FarmLink Auth] Redirecting to buyer dashboard");
-              window.location.href = "apps/web/pages/buyer/buyer-dashboard.html";
-            } else if (dbUser && dbUser.role === "farmer" && dbUser.verified === true) {
+              window.location.href =
+                "apps/web/pages/buyer/buyer-dashboard.html";
+            } else if (
+              dbUser &&
+              dbUser.role === "farmer" &&
+              dbUser.verified === true
+            ) {
               console.info("[FarmLink Auth] Redirecting to seller dashboard");
-              window.location.href = "apps/web/pages/seller/seller-dashboard.html";
+              window.location.href =
+                "apps/web/pages/seller/seller-dashboard.html";
             } else if (dbUser && dbUser.role === "farmer") {
-              console.info("[FarmLink Auth] Redirecting to verification pending");
-              window.location.href = "apps/web/pages/onboarding/verification-pending.html";
+              console.info(
+                "[FarmLink Auth] Redirecting to verification pending",
+              );
+              window.location.href =
+                "apps/web/pages/onboarding/verification-pending.html";
             } else {
               console.info("[FarmLink Auth] Redirecting to role selection");
-              window.location.href = "apps/web/pages/onboarding/role-selection.html";
+              window.location.href =
+                "apps/web/pages/onboarding/role-selection.html";
             }
           } catch (err) {
-            console.error("[FarmLink Auth] OTP verification or profile setup failed", {
-              code: err.code,
-              message: err.message,
-              phoneVerified,
-              error: err,
-            });
+            console.error(
+              "[FarmLink Auth] OTP verification or profile setup failed",
+              {
+                code: err.code,
+                message: err.message,
+                phoneVerified,
+                error: err,
+              },
+            );
             if (phoneVerified) {
               // Authentication succeeded; a Firestore profile bootstrap issue
               // must not trap a valid user on the OTP screen.
-              console.warn("[FarmLink Auth] Phone verified; Firestore setup failed. Redirecting to role selection.");
-              window.location.href = "apps/web/pages/onboarding/role-selection.html";
+              console.warn(
+                "[FarmLink Auth] Phone verified; Firestore setup failed. Redirecting to role selection.",
+              );
+              window.location.href =
+                "apps/web/pages/onboarding/role-selection.html";
               return;
             }
             window.farmlinkPhoneConfirmation = null;
@@ -600,20 +619,19 @@
         }, 1000);
       }
 
-      document.getElementById("resendBtn").addEventListener("click", async () => {
-        const phone = sessionStorage.getItem("farmlink_phone");
-        const resend = document.getElementById("resendBtn");
-        if (!phone) return;
-        resend.disabled = true;
-        try {
-          await requestFirebasePhoneOtp(phone, "recaptcha-container");
+      document
+        .getElementById("resendBtn")
+        .addEventListener("click", async () => {
+          const phone = sessionStorage.getItem("farmlink_phone");
+          const resend = document.getElementById("resendBtn");
+          if (!phone) return;
+          resend.disabled = true;
+          document.querySelectorAll("#otpBoxes input").forEach((input) => {
+            input.value = "";
+          });
+          document.getElementById("otpErr").style.display = "none";
           startOtpTimer();
-        } catch (error) {
-          document.getElementById("otpErr").textContent = `⚠ OTP नहीं भेजा गया: ${error.message}`;
-          document.getElementById("otpErr").style.display = "flex";
-          resend.disabled = false;
-        }
-      });
+        });
 
       // Load Lucide Icons
       if (!window.lucide) {
