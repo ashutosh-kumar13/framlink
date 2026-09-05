@@ -1,10 +1,6 @@
 import requests
 import time
-import os
-from dotenv import load_dotenv
-
-load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env"))
-api_key = os.getenv("DATA_GOV_API_KEY", "")
+from config import API_KEY
 
 def test_api(url, params, label):
     print(f"Testing {label}...")
@@ -20,6 +16,8 @@ def test_api(url, params, label):
             print(f"  Error: {resp.text[:200]}")
     except Exception as e:
         print(f"  Exception: {e}")
+
+api_key = API_KEY
 
 # Mandi API
 test_api(

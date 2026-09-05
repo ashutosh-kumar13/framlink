@@ -1,42 +1,55 @@
-/* Uttar Pradesh postal-location helper. */
+/* Uttar Pradesh postal-location helper. Requests are proxied server-side. */
 (function () {
   const RESOURCE_ID = "709e9d78-bf11-487d-93fd-d547d24cc0ef";
   const ROOT = `https://api.data.gov.in/resource/${RESOURCE_ID}`;
 
   function unique(values) {
-    return [...new Set(values.filter(Boolean).map((value) => String(value).trim()))].sort((a, b) => a.localeCompare(b, "hi"));
+    return [
+      ...new Set(values.filter(Boolean).map((value) => String(value).trim())),
+    ].sort((a, b) => a.localeCompare(b, "hi"));
   }
 
   async function lookupPincode(pincode) {
     const pin = String(pincode || "").replace(/\D/g, "");
-    if (!/^\d{6}$/.test(pin)) throw new Error("6 अंकों का सही पिनकोड दर्ज करें।");
+    if (!/^\d{6}$/.test(pin))
+      throw new Error("6 अंकों का सही पिनकोड दर्ज करें।");
 
     // Using Backend Proxy to avoid CORS and hide API Key
     const apiBase = window.FARMLINK_API_BASE || "http://127.0.0.1:5000";
     const response = await fetch(`${apiBase}/api/locations/pincode?pin=${pin}`);
 
-    if (!response.ok) throw new Error("Postal location service अभी उपलब्ध नहीं है।");
+    if (!response.ok)
+      throw new Error("Postal location service अभी उपलब्ध नहीं है।");
     const data = await response.json();
     if (!data.ok) throw new Error(data.message || "पिनकोड नहीं मिला।");
 
     const records = data.records;
-    const preferredRecord = records.find((record) => String(record.delivery || "").toLowerCase() === "delivery") || records[0];
+    const preferredRecord =
+      records.find(
+        (record) => String(record.delivery || "").toLowerCase() === "delivery",
+      ) || records[0];
 
     return {
       pincode: pin,
-      district: unique(records.map((record) => record.districtname || record.district))[0] || "",
+      district:
+        unique(
+          records.map((record) => record.districtname || record.district),
+        )[0] || "",
       postOffices: unique(records.map((record) => record.officename)),
       defaultPostOffice: preferredRecord?.officename || "",
       latitude: Number(preferredRecord?.latitude),
       longitude: Number(preferredRecord?.longitude),
-      state: preferredRecord?.statename || "Uttar Pradesh"
+      state: preferredRecord?.statename || "Uttar Pradesh",
     };
   }
 
   function populatePostOffices(select, offices, selected) {
     select.replaceChildren(new Option("Post Office चुनें", ""));
-    offices.forEach((office) => select.add(new Option(office, office, false, office === selected)));
-    if (selected && !offices.includes(selected)) select.add(new Option(selected, selected, true, true));
+    offices.forEach((office) =>
+      select.add(new Option(office, office, false, office === selected)),
+    );
+    if (selected && !offices.includes(selected))
+      select.add(new Option(selected, selected, true, true));
     select.disabled = offices.length === 0;
   }
 
@@ -57,15 +70,37 @@
     select.multiple = true;
     select.size = 5;
     select.style.cssText = previous.style.cssText;
-    ["गेहूं", "धान", "मक्का", "सरसों", "चना", "अरहर", "आलू", "गन्ना", "सब्ज़ियाँ"].forEach((crop) => select.add(new Option(crop, crop)));
-    const stored = String(previous.value || "").split(",").map((value) => value.trim());
-    [...select.options].forEach((option) => { option.selected = stored.includes(option.value); });
+    [
+      "गेहूं",
+      "धान",
+      "मक्का",
+      "सरसों",
+      "चना",
+      "अरहर",
+      "आलू",
+      "गन्ना",
+      "सब्ज़ियाँ",
+    ].forEach((crop) => select.add(new Option(crop, crop)));
+    const stored = String(previous.value || "")
+      .split(",")
+      .map((value) => value.trim());
+    [...select.options].forEach((option) => {
+      option.selected = stored.includes(option.value);
+    });
     Object.defineProperty(select, "value", {
       configurable: true,
-      get() { return [...select.selectedOptions].map((option) => option.value).join(", "); },
+      get() {
+        return [...select.selectedOptions]
+          .map((option) => option.value)
+          .join(", ");
+      },
       set(value) {
-        const values = String(value || "").split(",").map((item) => item.trim());
-        [...select.options].forEach((option) => { option.selected = values.includes(option.value); });
+        const values = String(value || "")
+          .split(",")
+          .map((item) => item.trim());
+        [...select.options].forEach((option) => {
+          option.selected = values.includes(option.value);
+        });
       },
     });
     previous.replaceWith(select);
@@ -82,9 +117,13 @@
     previous.replaceWith(select);
     Object.defineProperty(select, "value", {
       configurable: true,
-      get() { return select.options[select.selectedIndex]?.value || ""; },
+      get() {
+        return select.options[select.selectedIndex]?.value || "";
+      },
       set(value) {
-        const match = [...select.options].find((option) => option.value === value);
+        const match = [...select.options].find(
+          (option) => option.value === value,
+        );
         if (match) match.selected = true;
         else if (value) select.add(new Option(value, value, true, true));
       },
@@ -94,13 +133,25 @@
   }
 
   function mountPostalLocation() {
-    const form = document.getElementById("regForm") || document.getElementById("profileForm");
+    const form =
+      document.getElementById("regForm") ||
+      document.getElementById("profileForm");
     let stateInput = document.getElementById("state");
-    const district = document.getElementById("dist") || document.getElementById("district");
+    const district =
+      document.getElementById("dist") || document.getElementById("district");
     const village = document.getElementById("village");
     const crops = document.getElementById("crops");
-    const subDistrict = document.getElementById("subdistrict") || document.getElementById("subDistrict");
-    if (!form || !stateInput || !district || !village || stateInput.dataset.postalReady) return;
+    const subDistrict =
+      document.getElementById("subdistrict") ||
+      document.getElementById("subDistrict");
+    if (
+      !form ||
+      !stateInput ||
+      !district ||
+      !village ||
+      stateInput.dataset.postalReady
+    )
+      return;
     stateInput.dataset.postalReady = "true";
     if (stateInput.tagName === "SELECT") {
       const lockedInput = document.createElement("input");
@@ -112,10 +163,17 @@
       stateInput = lockedInput;
     }
     stateInput.value = "Uttar Pradesh";
-    Object.defineProperty(stateInput, "value", { configurable: true, get() { return "Uttar Pradesh"; }, set() {} });
+    Object.defineProperty(stateInput, "value", {
+      configurable: true,
+      get() {
+        return "Uttar Pradesh";
+      },
+      set() {},
+    });
     stateInput.readOnly = true;
     stateInput.disabled = true;
-    stateInput.style.cssText += ";background:#f1f8f3;color:#176b42;font-weight:700";
+    stateInput.style.cssText +=
+      ";background:#f1f8f3;color:#176b42;font-weight:700";
     district.readOnly = true;
     district.placeholder = "पिनकोड से अपने-आप आएगा";
     district.style.cssText += ";background:#f8fafc";
@@ -163,7 +221,11 @@
         const result = await lookupPincode(pin.value);
         pin.value = result.pincode;
         district.value = result.district;
-        populatePostOffices(officeSelect, result.postOffices, officeSelect.dataset.savedValue || result.defaultPostOffice);
+        populatePostOffices(
+          officeSelect,
+          result.postOffices,
+          officeSelect.dataset.savedValue || result.defaultPostOffice,
+        );
         officeSelect.disabled = true;
         officeSelect.dataset.savedValue = "";
         hint.textContent = `${result.postOffices.length} Post Office मिले — एक Post Office अपने-आप चुन लिया गया है।`;
@@ -171,7 +233,9 @@
         district.value = "";
         populatePostOffices(officeSelect, []);
         hint.textContent = error.message;
-      } finally { lookupButton.disabled = false; }
+      } finally {
+        lookupButton.disabled = false;
+      }
     }
     lookupButton.addEventListener("click", search);
     pin.addEventListener("change", search);
@@ -182,7 +246,11 @@
           await window.firebaseScriptReady;
           const { client, user } = await getCurrentUser();
           if (!user) return;
-          const result = await client.from("farmer_profiles").select("postal_code,village").eq("user_id", user.id).maybeSingle();
+          const result = await client
+            .from("farmer_profiles")
+            .select("postal_code,village")
+            .eq("user_id", user.id)
+            .maybeSingle();
           if (result.error || !result.data?.postal_code) return;
           pin.value = result.data.postal_code;
           officeSelect.dataset.savedValue = result.data.village || "";
@@ -194,7 +262,13 @@
     }
   }
 
-  window.FarmLinkPostOffice = { lookupPincode, populatePostOffices, mountPostalLocation, state: "Uttar Pradesh" };
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mountPostalLocation);
+  window.FarmLinkPostOffice = {
+    lookupPincode,
+    populatePostOffices,
+    mountPostalLocation,
+    state: "Uttar Pradesh",
+  };
+  if (document.readyState === "loading")
+    document.addEventListener("DOMContentLoaded", mountPostalLocation);
   else mountPostalLocation();
 })();

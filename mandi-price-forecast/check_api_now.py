@@ -1,12 +1,9 @@
 import requests
 import json
-import os
-from dotenv import load_dotenv
-
-load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env"))
+from config import API_KEY
 
 def check():
-    api_key = os.getenv("DATA_GOV_API_KEY", "")
+    api_key = API_KEY
     rid = "35985678-0d79-46b4-9ed6-6f13308a1d24"
     url = f"https://api.data.gov.in/resource/{rid}"
     params = {"api-key": api_key, "format": "json", "limit": 1}

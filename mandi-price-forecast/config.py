@@ -1,9 +1,11 @@
 import os
+
 from dotenv import load_dotenv
+
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env"))
 
 # Base directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-load_dotenv(os.path.join(BASE_DIR, "..", ".env"))
 
 # API Settings (Switching to the main Historical Resource ID)
 API_KEY = os.getenv("DATA_GOV_API_KEY", "")

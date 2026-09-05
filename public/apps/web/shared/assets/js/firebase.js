@@ -3,21 +3,14 @@
  *
  * 1. Create a Firebase web app.
  * 2. Enable Phone Authentication, Cloud Firestore and Firebase Storage.
- * 3. Paste its public web configuration below.
+ * 3. Configure the Firebase web values in the server environment.
  *
  * Until then, the prototype stays usable with browser-local demo data. The
  * Firebase config is public by design; protect data using Firestore and Storage
  * Security Rules, never by hiding it in this file.
  */
 
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyAdBKMVyfelAmGpPmZwMA9Dpp-rzEvDsiE",
-  authDomain: "test-8703f.firebaseapp.com",
-  projectId: "test-8703f",
-  storageBucket: "test-8703f.firebasestorage.app",
-  messagingSenderId: "304029031095",
-  appId: "1:304029031095:web:aaac96250a4c2ec539cb32",
-};
+const FIREBASE_CONFIG = window.FARMLINK_FIREBASE_CONFIG || {};
 
 const hasFirebaseConfig = Boolean(
   FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.projectId && FIREBASE_CONFIG.appId,
@@ -33,7 +26,8 @@ window.firebaseMode = hasFirebaseConfig ? "firebase" : "demo";
 const localKey = (collection) => `farmlink_firebase_${collection}`;
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const idFor = () =>
-  globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  globalThis.crypto?.randomUUID?.() ||
+  `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
 function demoRows(collection) {
   try {
@@ -68,20 +62,58 @@ function firestoreAdapter(firebase) {
   });
 
   function builder(collection) {
-    const state = { filters: [], order: null, action: "select", payload: null, returnSingle: false };
+    const state = {
+      filters: [],
+      order: null,
+      action: "select",
+      payload: null,
+      returnSingle: false,
+    };
     const api = {
       // In Supabase, .select() after insert/update only requests returned rows;
       // it must not turn a pending write back into a read query.
-      select() { return api; },
-      eq(field, value) { state.filters.push([field, value]); return api; },
-      order(field, options = {}) { state.order = [field, options.ascending === false ? "desc" : "asc"]; return api; },
-      insert(payload) { state.action = "insert"; state.payload = payload; return api; },
-      upsert(payload) { state.action = "upsert"; state.payload = payload; return api; },
-      update(payload) { state.action = "update"; state.payload = payload; return api; },
-      delete() { state.action = "delete"; return api; },
-      single() { state.returnSingle = true; return api; },
-      maybeSingle() { state.returnSingle = true; state.maybeSingle = true; return api; },
-      then(resolve, reject) { return execute().then(resolve, reject); },
+      select() {
+        return api;
+      },
+      eq(field, value) {
+        state.filters.push([field, value]);
+        return api;
+      },
+      order(field, options = {}) {
+        state.order = [field, options.ascending === false ? "desc" : "asc"];
+        return api;
+      },
+      insert(payload) {
+        state.action = "insert";
+        state.payload = payload;
+        return api;
+      },
+      upsert(payload) {
+        state.action = "upsert";
+        state.payload = payload;
+        return api;
+      },
+      update(payload) {
+        state.action = "update";
+        state.payload = payload;
+        return api;
+      },
+      delete() {
+        state.action = "delete";
+        return api;
+      },
+      single() {
+        state.returnSingle = true;
+        return api;
+      },
+      maybeSingle() {
+        state.returnSingle = true;
+        state.maybeSingle = true;
+        return api;
+      },
+      then(resolve, reject) {
+        return execute().then(resolve, reject);
+      },
     };
 
     async function matching() {
@@ -91,12 +123,14 @@ function firestoreAdapter(firebase) {
           // Firestore document IDs are metadata, not stored fields. The app's
           // Supabase-like API exposes that metadata as `id`, so translate id
           // filters to Firestore's document-ID sentinel.
-          const firestoreField = field === "id" ? firebase.firestore.FieldPath.documentId() : field;
+          const firestoreField =
+            field === "id" ? firebase.firestore.FieldPath.documentId() : field;
           query = query.where(firestoreField, "==", value);
         });
         return query;
       };
-      const rowsFrom = (snapshot) => snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      const rowsFrom = (snapshot) =>
+        snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
       let query = filteredQuery();
       if (state.order) query = query.orderBy(state.order[0], state.order[1]);
@@ -124,15 +158,27 @@ function firestoreAdapter(firebase) {
       try {
         if (state.action === "select") {
           const rows = await matching();
-          return { data: state.returnSingle ? rows[0] || null : rows, error: null };
+          return {
+            data: state.returnSingle ? rows[0] || null : rows,
+            error: null,
+          };
         }
         if (state.action === "insert" || state.action === "upsert") {
-          const input = Array.isArray(state.payload) ? state.payload : [state.payload];
+          const input = Array.isArray(state.payload)
+            ? state.payload
+            : [state.payload];
           const rows = [];
           for (const item of input) {
             const id = item.id || idFor();
-            const record = { ...item, created_at: item.created_at || new Date().toISOString(), updated_at: new Date().toISOString() };
-            await db.collection(collection).doc(id).set(record, { merge: state.action === "upsert" });
+            const record = {
+              ...item,
+              created_at: item.created_at || new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            };
+            await db
+              .collection(collection)
+              .doc(id)
+              .set(record, { merge: state.action === "upsert" });
             rows.push({ id, ...record });
           }
           return { data: state.returnSingle ? rows[0] : rows, error: null };
@@ -141,100 +187,290 @@ function firestoreAdapter(firebase) {
         const batch = db.batch();
         rows.forEach((row) => {
           const ref = db.collection(collection).doc(row.id);
-          state.action === "delete" ? batch.delete(ref) : batch.update(ref, { ...state.payload, updated_at: new Date().toISOString() });
+          state.action === "delete"
+            ? batch.delete(ref)
+            : batch.update(ref, {
+                ...state.payload,
+                updated_at: new Date().toISOString(),
+              });
         });
         await batch.commit();
-        return { data: state.returnSingle ? rows[0] || null : rows, error: null };
-      } catch (error) { return { data: null, error }; }
+        return {
+          data: state.returnSingle ? rows[0] || null : rows,
+          error: null,
+        };
+      } catch (error) {
+        return { data: null, error };
+      }
     }
     return api;
   }
 
   return {
     auth: {
-      async getSession() { const user = await authStateReady; return { data: { session: user ? { user: { id: user.uid, phone: user.phoneNumber || null } } : null }, error: null }; },
-      async getUser() { await authStateReady; const user = authInstance.currentUser; return { data: { user: user ? { id: user.uid, phone: user.phoneNumber || null } : null }, error: null }; },
-      async signOut() { await authInstance.signOut(); return { error: null }; },
+      async getSession() {
+        const user = await authStateReady;
+        return {
+          data: {
+            session: user
+              ? { user: { id: user.uid, phone: user.phoneNumber || null } }
+              : null,
+          },
+          error: null,
+        };
+      },
+      async getUser() {
+        await authStateReady;
+        const user = authInstance.currentUser;
+        return {
+          data: {
+            user: user
+              ? { id: user.uid, phone: user.phoneNumber || null }
+              : null,
+          },
+          error: null,
+        };
+      },
+      async signOut() {
+        await authInstance.signOut();
+        return { error: null };
+      },
     },
     from: builder,
-    storage: { from: () => ({ upload: async (path, file) => { try { await storage.ref(path).put(file); return { error: null }; } catch (error) { return { error }; } } }) },
-    channel: () => ({ on() { return this; }, subscribe() { return this; } }),
+    storage: {
+      from: () => ({
+        upload: async (path, file) => {
+          try {
+            await storage.ref(path).put(file);
+            return { error: null };
+          } catch (error) {
+            return { error };
+          }
+        },
+      }),
+    },
+    channel: () => ({
+      on() {
+        return this;
+      },
+      subscribe() {
+        return this;
+      },
+    }),
     removeChannel() {},
   };
 }
 
 function demoAdapter() {
   function builder(collection) {
-    const state = { filters: [], order: null, action: "select", payload: null, returnSingle: false };
-    const api = {
-      select() { return api; }, eq(field, value) { state.filters.push([field, value]); return api; },
-      order(field, options = {}) { state.order = [field, options.ascending === false ? -1 : 1]; return api; },
-      insert(payload) { state.action = "insert"; state.payload = payload; return api; }, upsert(payload) { state.action = "upsert"; state.payload = payload; return api; },
-      update(payload) { state.action = "update"; state.payload = payload; return api; }, delete() { state.action = "delete"; return api; },
-      single() { state.returnSingle = true; return api; }, maybeSingle() { state.returnSingle = true; return api; },
-      then(resolve, reject) { return execute().then(resolve, reject); },
+    const state = {
+      filters: [],
+      order: null,
+      action: "select",
+      payload: null,
+      returnSingle: false,
     };
-    function matches(row) { return state.filters.every(([field, value]) => row[field] === value); }
+    const api = {
+      select() {
+        return api;
+      },
+      eq(field, value) {
+        state.filters.push([field, value]);
+        return api;
+      },
+      order(field, options = {}) {
+        state.order = [field, options.ascending === false ? -1 : 1];
+        return api;
+      },
+      insert(payload) {
+        state.action = "insert";
+        state.payload = payload;
+        return api;
+      },
+      upsert(payload) {
+        state.action = "upsert";
+        state.payload = payload;
+        return api;
+      },
+      update(payload) {
+        state.action = "update";
+        state.payload = payload;
+        return api;
+      },
+      delete() {
+        state.action = "delete";
+        return api;
+      },
+      single() {
+        state.returnSingle = true;
+        return api;
+      },
+      maybeSingle() {
+        state.returnSingle = true;
+        return api;
+      },
+      then(resolve, reject) {
+        return execute().then(resolve, reject);
+      },
+    };
+    function matches(row) {
+      return state.filters.every(([field, value]) => row[field] === value);
+    }
     async function execute() {
       try {
         let rows = demoRows(collection);
         const found = () => rows.filter(matches);
         if (state.action === "select") {
           let data = found();
-          if (state.order) data.sort((a, b) => (a[state.order[0]] > b[state.order[0]] ? state.order[1] : -state.order[1]));
-          return { data: state.returnSingle ? clone(data[0] || null) : clone(data), error: null };
+          if (state.order)
+            data.sort((a, b) =>
+              a[state.order[0]] > b[state.order[0]]
+                ? state.order[1]
+                : -state.order[1],
+            );
+          return {
+            data: state.returnSingle ? clone(data[0] || null) : clone(data),
+            error: null,
+          };
         }
         if (state.action === "insert" || state.action === "upsert") {
-          const input = Array.isArray(state.payload) ? state.payload : [state.payload]; const saved = [];
-          input.forEach((item) => { const id = item.id || idFor(); const index = rows.findIndex((row) => row.id === id); const row = { ...(index >= 0 && state.action === "upsert" ? rows[index] : {}), ...item, id, created_at: item.created_at || new Date().toISOString(), updated_at: new Date().toISOString() }; index >= 0 ? rows[index] = row : rows.push(row); saved.push(row); });
-          saveDemoRows(collection, rows); return { data: state.returnSingle ? clone(saved[0]) : clone(saved), error: null };
+          const input = Array.isArray(state.payload)
+            ? state.payload
+            : [state.payload];
+          const saved = [];
+          input.forEach((item) => {
+            const id = item.id || idFor();
+            const index = rows.findIndex((row) => row.id === id);
+            const row = {
+              ...(index >= 0 && state.action === "upsert" ? rows[index] : {}),
+              ...item,
+              id,
+              created_at: item.created_at || new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            };
+            index >= 0 ? (rows[index] = row) : rows.push(row);
+            saved.push(row);
+          });
+          saveDemoRows(collection, rows);
+          return {
+            data: state.returnSingle ? clone(saved[0]) : clone(saved),
+            error: null,
+          };
         }
-        const targets = found(); rows = rows.filter((row) => !targets.includes(row));
-        if (state.action === "update") { rows.push(...targets.map((row) => ({ ...row, ...state.payload, updated_at: new Date().toISOString() }))); }
-        saveDemoRows(collection, rows); return { data: state.returnSingle ? clone(targets[0] || null) : clone(targets), error: null };
-      } catch (error) { return { data: null, error }; }
+        const targets = found();
+        rows = rows.filter((row) => !targets.includes(row));
+        if (state.action === "update") {
+          rows.push(
+            ...targets.map((row) => ({
+              ...row,
+              ...state.payload,
+              updated_at: new Date().toISOString(),
+            })),
+          );
+        }
+        saveDemoRows(collection, rows);
+        return {
+          data: state.returnSingle ? clone(targets[0] || null) : clone(targets),
+          error: null,
+        };
+      } catch (error) {
+        return { data: null, error };
+      }
     }
     return api;
   }
   return {
     auth: {
-      async getSession() { const user = currentDemoUser(); return { data: { session: user ? { user } : null }, error: null }; },
-      async getUser() { return { data: { user: currentDemoUser() }, error: null }; },
-      async signOut() { localStorage.removeItem("farmlink_firebase_user"); return { error: null }; },
+      async getSession() {
+        const user = currentDemoUser();
+        return { data: { session: user ? { user } : null }, error: null };
+      },
+      async getUser() {
+        return { data: { user: currentDemoUser() }, error: null };
+      },
+      async signOut() {
+        localStorage.removeItem("farmlink_firebase_user");
+        return { error: null };
+      },
     },
-    from: builder, storage: { from: () => ({ upload: async () => ({ error: null }) }) },
-    channel: () => ({ on() { return this; }, subscribe() { return this; } }), removeChannel() {},
+    from: builder,
+    storage: { from: () => ({ upload: async () => ({ error: null }) }) },
+    channel: () => ({
+      on() {
+        return this;
+      },
+      subscribe() {
+        return this;
+      },
+    }),
+    removeChannel() {},
   };
 }
 
 window.firebaseReady = new Promise((resolve) => {
-  if (!hasFirebaseConfig) { window.firebaseClient = demoAdapter(); resolve(window.firebaseClient); return; }
+  if (!hasFirebaseConfig) {
+    window.firebaseClient = demoAdapter();
+    resolve(window.firebaseClient);
+    return;
+  }
 
   // Timeout to fallback to demo mode if Firebase scripts take too long
   const timeoutId = setTimeout(() => {
-    console.warn("Firebase scripts taking too long to load. Falling back to Demo Mode.");
+    console.warn(
+      "Firebase scripts taking too long to load. Falling back to Demo Mode.",
+    );
     window.firebaseMode = "demo";
     window.firebaseClient = demoAdapter();
     resolve(window.firebaseClient);
   }, 4000);
 
-  const scripts = ["https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js", "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js", "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js", "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"];
+  const scripts = [
+    "https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js",
+    "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js",
+    "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js",
+    "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js",
+  ];
   let loaded = 0;
-  scripts.forEach((src) => { const script = document.createElement("script"); script.src = src; script.onload = () => { loaded += 1; if (loaded === scripts.length) {
-    clearTimeout(timeoutId);
-    try {
-      firebase.initializeApp(FIREBASE_CONFIG); window.firebaseClient = firestoreAdapter(firebase); resolve(window.firebaseClient);
-    } catch(e) {
-      console.warn("Firebase Init failed:", e);
-      window.firebaseClient = demoAdapter(); resolve(window.firebaseClient);
-    }
-  } }; script.onerror = () => { loaded += 1; if (loaded === scripts.length) { clearTimeout(timeoutId); window.firebaseMode = "demo"; window.firebaseClient = demoAdapter(); resolve(window.firebaseClient); } }; document.head.appendChild(script); });
+  scripts.forEach((src) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = () => {
+      loaded += 1;
+      if (loaded === scripts.length) {
+        clearTimeout(timeoutId);
+        try {
+          firebase.initializeApp(FIREBASE_CONFIG);
+          window.firebaseClient = firestoreAdapter(firebase);
+          resolve(window.firebaseClient);
+        } catch (e) {
+          console.warn("Firebase Init failed:", e);
+          window.firebaseClient = demoAdapter();
+          resolve(window.firebaseClient);
+        }
+      }
+    };
+    script.onerror = () => {
+      loaded += 1;
+      if (loaded === scripts.length) {
+        clearTimeout(timeoutId);
+        window.firebaseMode = "demo";
+        window.firebaseClient = demoAdapter();
+        resolve(window.firebaseClient);
+      }
+    };
+    document.head.appendChild(script);
+  });
 });
 
 async function getCurrentUser() {
-  if (window.authGuardReady && !(await window.authGuardReady)) return { client: null, user: null };
-  const client = await window.firebaseReady; const { data, error } = await client.auth.getUser(); if (error) throw error;
-  const user = data.user; if (user && !user.phone) user.phone = sessionStorage.getItem("farmlink_phone") || null;
+  if (window.authGuardReady && !(await window.authGuardReady))
+    return { client: null, user: null };
+  const client = await window.firebaseReady;
+  const { data, error } = await client.auth.getUser();
+  if (error) throw error;
+  const user = data.user;
+  if (user && !user.phone)
+    user.phone = sessionStorage.getItem("farmlink_phone") || null;
   return { client, user };
 }
 
@@ -251,7 +487,8 @@ async function requestFirebasePhoneOtp(phoneNumber, containerId) {
 
   const auth = window.firebase.auth();
   auth.languageCode = "hi";
-  auth.settings.appVerificationDisabledForTesting = FIREBASE_USE_TEST_PHONE_AUTH;
+  auth.settings.appVerificationDisabledForTesting =
+    FIREBASE_USE_TEST_PHONE_AUTH;
 
   if (window.farmlinkRecaptchaVerifier) {
     window.farmlinkRecaptchaVerifier.clear();
@@ -276,8 +513,15 @@ async function confirmFirebasePhoneOtp(code) {
 
 async function requireVerifiedUser() {
   const { client, user } = await getCurrentUser();
-  if (!user) { window.location.href = "../../login.html"; return false; }
-  const { data, error } = await client.from("users").select("verified,role").eq("id", user.id).maybeSingle();
+  if (!user) {
+    window.location.href = "../../login.html";
+    return false;
+  }
+  const { data, error } = await client
+    .from("users")
+    .select("verified,role")
+    .eq("id", user.id)
+    .maybeSingle();
   if (error || !data) return false;
   // Sellers may use the app while KYC/bank verification is pending; individual
   // screens show that status and dashboard quick actions guide completion.

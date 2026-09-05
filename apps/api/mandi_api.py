@@ -1,9 +1,9 @@
 from __future__ import annotations
 import os
-from dotenv import load_dotenv
-
-load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), ".env"))
 os.environ["OPENBLAS_NUM_THREADS"] = "1"
+from pathlib import Path
+
+from dotenv import load_dotenv
 import requests
 from flask import Flask, jsonify, request, send_from_directory
 from requests.adapters import HTTPAdapter
@@ -11,6 +11,7 @@ from urllib3.util.retry import Retry
 
 app = Flask(__name__)
 
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 API_KEY = os.getenv("DATA_GOV_API_KEY", "")
 # Main Historical Resource ID
 RESOURCE_ID = "35985678-0d79-46b4-9ed6-6f13308a1d24"

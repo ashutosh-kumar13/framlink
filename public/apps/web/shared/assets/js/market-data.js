@@ -1,9 +1,10 @@
 /**
  * FarmLink AI Market Data Service (Pure JS)
- * Fetches real-time mandi prices directly from data.gov.in using a CORS proxy.
+ * Fetches real-time mandi prices through the local API proxy.
  */
 (function () {
   const RESOURCE_ID = "9ef84268-d588-465a-a308-a864a43d0070"; // Daily Mandi Prices
+  const API_BASE = window.FARMLINK_API_BASE || "http://127.0.0.1:5000";
 
   const iconMap = {
     Wheat: "wheat",
@@ -23,11 +24,10 @@
       ? `&filters[district]=${encodeURIComponent(district.toLowerCase())}`
       : "";
     const url = `https://api.data.gov.in/resource/${RESOURCE_ID}?format=json&limit=50&sort[arrival_date]=desc&${filters}${distFilter}`;
-    const apiBase = window.FARMLINK_API_BASE || "http://127.0.0.1:5000";
 
     try {
       const response = await fetch(
-        `${apiBase}/api/proxy/ogd?url=${encodeURIComponent(url)}`,
+        `${API_BASE}/api/proxy/ogd?url=${encodeURIComponent(url)}`,
       );
       if (!response.ok) throw new Error("API Offline");
 

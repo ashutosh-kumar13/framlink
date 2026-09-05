@@ -17,10 +17,15 @@ function mountPageShimmer() {
     try {
       if (window.authGuardReady) await window.authGuardReady;
       if (window.firebaseScriptReady) await window.firebaseScriptReady;
-    } catch { /* A page error renders its own error state after the shimmer. */ }
+    } catch {
+      /* A page error renders its own error state after the shimmer. */
+    }
 
     clearTimeout(safetyTimeout);
-    window.setTimeout(() => { shimmer.classList.add("is-hidden"); window.setTimeout(() => shimmer.remove(), 220); }, 260);
+    window.setTimeout(() => {
+      shimmer.classList.add("is-hidden");
+      window.setTimeout(() => shimmer.remove(), 220);
+    }, 260);
   };
   dismiss();
 }
@@ -129,14 +134,24 @@ async function initShell(role, activeKey, title) {
     const { client, user } = await getCurrentUser();
     if (user) {
       const [{ data: dbUser }, { data: profile }] = await Promise.all([
-        client.from("users").select("full_name").eq("id", user.id).maybeSingle(),
-        client.from("farmer_profiles").select("identity_verified, gender").eq("user_id", user.id).maybeSingle()
+        client
+          .from("users")
+          .select("full_name")
+          .eq("id", user.id)
+          .maybeSingle(),
+        client
+          .from("farmer_profiles")
+          .select("identity_verified, gender")
+          .eq("user_id", user.id)
+          .maybeSingle(),
       ]);
       if (dbUser?.full_name) userName = dbUser.full_name;
       if (profile?.identity_verified) isKycVerified = true;
       if (profile?.gender) userGender = profile.gender;
     }
-  } catch (e) { console.warn("Sidebar data fetch failed", e); }
+  } catch (e) {
+    console.warn("Sidebar data fetch failed", e);
+  }
 
   const avatarSeed = `${userGender}_${userName}`;
   const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(avatarSeed)}`;
@@ -256,11 +271,19 @@ function wireOtpInputs(selector) {
 (function () {
   const s = document.createElement("script");
   s.src = new URL("firebase.js", document.currentScript.src).href;
-  window.firebaseScriptReady = new Promise((resolve) => {
-    s.onload = resolve;
-    s.onerror = resolve;
-  });
-  document.head.appendChild(s);
+  window.firebaseScriptReady = async () => {
+    try {
+      const apiBase = window.FARMLINK_API_BASE || "http://127.0.0.1:5000";
+      const response = await fetch(`${apiBase}/api/config`);
+      const config = await response.json();
+      window.FARMLINK_FIREBASE_CONFIG = config.firebase || {};
+    } catch {}
+    await new Promise((resolve) => {
+      s.onload = resolve;
+      s.onerror = resolve;
+      document.head.appendChild(s);
+    });
+  };
 })();
 
 // Every page under apps/web/pages is protected.  The login screen is the only

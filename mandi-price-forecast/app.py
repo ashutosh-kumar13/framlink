@@ -8,6 +8,7 @@ os.environ["MKL_NUM_THREADS"] = "1"
 import requests
 import time
 import json
+from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 from datetime import datetime
 import pandas as pd
 import numpy as np
@@ -290,12 +291,27 @@ def proxy_ogd():
     target_url = request.args.get('url')
     if not target_url or 'api.data.gov.in' not in target_url: return jsonify({"ok": False}), 400
     try:
-        resp = session.get(target_url, params={"api-key": API_KEY}, timeout=30)
+        parsed = urlparse(target_url)
+        params = dict(parse_qsl(parsed.query, keep_blank_values=True))
+        params["api-key"] = API_KEY
+        target_url = urlunparse(parsed._replace(query=urlencode(params)))
+        resp = session.get(target_url, timeout=30)
         return jsonify(resp.json())
     except: return jsonify({"ok": False}), 500
 
 @app.route('/api/config')
-def get_config(): return jsonify({"state": STATE, "district": DISTRICT, "mandi": MANDI, "commodity": COMMODITY})
+def get_config():
+    return jsonify({
+        "state": STATE, "district": DISTRICT, "mandi": MANDI, "commodity": COMMODITY,
+        "firebase": {
+            "apiKey": os.getenv("FIREBASE_API_KEY", ""),
+            "authDomain": os.getenv("FIREBASE_AUTH_DOMAIN", ""),
+            "projectId": os.getenv("FIREBASE_PROJECT_ID", ""),
+            "storageBucket": os.getenv("FIREBASE_STORAGE_BUCKET", ""),
+            "messagingSenderId": os.getenv("FIREBASE_MESSAGING_SENDER_ID", ""),
+            "appId": os.getenv("FIREBASE_APP_ID", ""),
+        },
+    })
 
 @app.route('/public/<path:path>')
 def serve_public(path):

@@ -4,7 +4,7 @@
  */
 (function () {
   const MAIN_RESOURCE = "35985678-0d79-46b4-9ed6-6f13308a1d24"; // Historical Resource (More Reliable)
-  const LOCAL_PROXY = "http://127.0.0.1:5000/api/proxy/ogd?url=";
+  const API_BASE = window.FARMLINK_API_BASE || "http://127.0.0.1:5000";
 
   function normalize(str) {
     if (!str) return "";
@@ -23,7 +23,7 @@
 
   async function fetchWithRetry(apiTarget) {
     try {
-      const url = `${LOCAL_PROXY}${encodeURIComponent(apiTarget)}`;
+      const url = `${API_BASE}/api/proxy/ogd?url=${encodeURIComponent(apiTarget)}`;
       const response = await fetch(url);
       if (response.ok) return await response.json();
     } catch (e) {
