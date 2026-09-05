@@ -23,14 +23,15 @@ def generate_forecast(days=30, state=None, district=None, mandi=None, commodity=
 
     # 1. Load Model and Latest Data
     model_data = joblib.load(target_model_path)
-    std_volatility = model_data.get("volatility", 0.02)
-
     df = pd.read_csv(target_clean)
     df['arrival_date'] = pd.to_datetime(df['arrival_date'])
     df = df.sort_values('arrival_date').reset_index(drop=True)
 
     latest_actual_price = float(df.iloc[-1]['modal_price'])
     latest_date = df.iloc[-1]['arrival_date']
+    recent_changes = df['modal_price'].pct_change().replace([np.inf, -np.inf], np.nan).dropna().tail(30)
+    typical_daily_change = float(recent_changes.abs().median()) if not recent_changes.empty else 0.01
+    max_daily_change = min(0.05, max(0.01, typical_daily_change * 3))
 
     # Hot Fix: If data is older than 7 days, check for a "Today" price anchor
     days_stale = (datetime.now() - latest_date).days
@@ -104,8 +105,7 @@ def generate_forecast(days=30, state=None, district=None, mandi=None, commodity=
             feat_row['current_temp'] = 25
 
         if is_baseline:
-            # Baseline: Mean drift + noise
-            change = model_data.get("mean_change", 0) + (np.random.normal(0, std_volatility * 0.3))
+            change = model_data.get("mean_change", 0)
         else:
             lags = [1, 2, 3, 7]
             for lag in lags:
@@ -136,13 +136,10 @@ def generate_forecast(days=30, state=None, district=None, mandi=None, commodity=
             X = pd.DataFrame([feat_row])[feature_cols]
             change = model.predict(X)[0]
 
-        # Clamping
-        clamped_change = max(-3 * std_volatility, min(3 * std_volatility, change))
+        weather_change = weather_impacts[i - 1] - 1.0 if i <= len(weather_impacts) else 0.0
+        combined_change = float(change) + weather_change
+        clamped_change = max(-max_daily_change, min(max_daily_change, combined_change))
         next_price = current_price * (1 + clamped_change)
-
-        # Apply additional supply chain multiplier if not already captured by the model
-        if i <= 7:
-            next_price *= weather_impacts[i-1]
 
         next_price = round(next_price, 2)
 
