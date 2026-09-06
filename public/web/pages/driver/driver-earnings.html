@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="hi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>FarmLink Driver â€” à¤¸à¤¾à¤°à¤¥à¥€ à¤•à¤®à¤¾à¤ˆ à¤µ à¤­à¥à¤—à¤¤à¤¾à¤¨</title>
+    <link rel="stylesheet" href="../../shared/assets/css/driver.css" />
+  </head>
+  <body>
+    <div class="driver-app-frame">
+      <!-- Topbar Slot with Desktop Nav -->
+      <div id="driver-topbar-slot"></div>
+
+      <main class="driver-main">
+        <div class="card-title-row" style="margin-bottom: 8px">
+          <div>
+            <h1>à¤•à¤®à¤¾à¤ˆ à¤”à¤° à¤­à¥à¤—à¤¤à¤¾à¤¨ (Earnings)</h1>
+            <p style="font-size: 13px; color: var(--ink-soft); margin: 0">
+              à¤¸à¤¾à¤ªà¥à¤¤à¤¾à¤¹à¤¿à¤• à¤µà¤¿à¤µà¤°à¤£, à¤ªà¥‡à¤†à¤‰à¤Ÿ à¤¸à¥à¤¥à¤¿à¤¤à¤¿ à¤µ à¤Ÿà¥à¤°à¤¿à¤ª à¤²à¥‡à¤œà¤°
+            </p>
+          </div>
+          <button
+            id="btnDownloadStatement"
+            class="btn btn-sm btn-lime"
+            style="width: auto"
+          >
+            <i data-lucide="download" style="width: 15px; height: 15px"></i>
+            <span>à¤¸à¥à¤Ÿà¥‡à¤Ÿà¤®à¥‡à¤‚à¤Ÿ à¤¡à¤¾à¤‰à¤¨à¤²à¥‹à¤¡</span>
+          </button>
+        </div>
+
+        <!-- Responsive Two-Column Layout on Laptop/Desktop -->
+        <div class="responsive-two-col">
+          <!-- Left Column: Summary Card & Bank Info -->
+          <div style="display: flex; flex-direction: column; gap: 16px">
+            <!-- Big Hero Earnings Card -->
+            <div
+              class="active-trip-hero"
+              style="background: linear-gradient(135deg, #1c6b44, #0f4428)"
+            >
+              <div
+                style="
+                  font-size: 13px;
+                  color: rgba(255, 255, 255, 0.85);
+                  font-weight: 600;
+                  margin-bottom: 2px;
+                "
+              >
+                à¤•à¥à¤² à¤¸à¤¾à¤ªà¥à¤¤à¤¾à¤¹à¤¿à¤• à¤•à¤®à¤¾à¤ˆ (This Week's Earnings)
+              </div>
+              <div
+                style="
+                  font-size: 36px;
+                  font-weight: 800;
+                  font-family: var(--font-display);
+                  color: var(--lime);
+                  line-height: 1.2;
+                  margin-bottom: 14px;
+                "
+                id="dispWeeklyTotal"
+              >
+                â‚¹14,600
+              </div>
+
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  gap: 10px;
+                  background: rgba(0, 0, 0, 0.25);
+                  border-radius: var(--radius-md);
+                  padding: 12px 14px;
+                  font-size: 13px;
+                "
+              >
+                <div>
+                  <span style="color: rgba(255, 255, 255, 0.7)"
+                    >à¤†à¤œ à¤•à¥€ à¤•à¤®à¤¾à¤ˆ:</span
+                  >
+                  <div
+                    style="font-weight: 700; font-size: 16px; color: #fff"
+                    id="dispTodayEarning"
+                  >
+                    â‚¹2,850
+                  </div>
+                </div>
+                <div>
+                  <span style="color: rgba(255, 255, 255, 0.7)"
+                    >à¤†à¤—à¤¾à¤®à¥€ à¤­à¥à¤—à¤¤à¤¾à¤¨ (Pending):</span
+                  >
+                  <div
+                    style="font-weight: 700; font-size: 16px; color: #fed7aa"
+                    id="dispPendingPayout"
+                  >
+                    â‚¹1,850
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bank / UPI Account Payout Info -->
+            <div class="driver-card" style="padding: 16px">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  margin-bottom: 8px;
+                "
+              >
+                <div style="display: flex; align-items: center; gap: 10px">
+                  <div
+                    style="
+                      width: 38px;
+                      height: 38px;
+                      border-radius: 50%;
+                      background: var(--primary-tint);
+                      color: var(--primary);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                    "
+                  >
+                    <i
+                      data-lucide="wallet"
+                      style="width: 20px; height: 20px"
+                    ></i>
+                  </div>
+                  <div>
+                    <strong style="font-size: 14px"
+                      >à¤ªà¥à¤°à¤¾à¤¥à¤®à¤¿à¤• à¤­à¥à¤—à¤¤à¤¾à¤¨ à¤–à¤¾à¤¤à¤¾ (UPI Payout)</strong
+                    >
+                    <p
+                      class="mono"
+                      style="
+                        font-size: 12.5px;
+                        color: var(--ink-soft);
+                        margin: 0;
+                      "
+                    >
+                      sunil.yadav@oksbi
+                    </p>
+                  </div>
+                </div>
+                <span class="badge badge-approved">à¤¸à¤•à¥à¤°à¤¿à¤¯ âœ“</span>
+              </div>
+              <p style="font-size: 12px; color: var(--ink-muted); margin: 0">
+                à¤­à¥à¤—à¤¤à¤¾à¤¨ à¤ªà¥à¤°à¤¤à¤¿à¤¦à¤¿à¤¨ à¤¶à¤¾à¤® 8:00 à¤¬à¤œà¥‡ à¤¸à¥€à¤§à¥‡ à¤¬à¥ˆà¤‚à¤• à¤–à¤¾à¤¤à¥‡ à¤®à¥‡à¤‚ à¤œà¤®à¤¾ à¤•à¤¿à¤¯à¤¾ à¤œà¤¾à¤¤à¤¾
+                à¤¹à¥ˆà¥¤
+              </p>
+            </div>
+          </div>
+
+          <!-- Right Column: Trip Earnings History Ledger -->
+          <div style="display: flex; flex-direction: column; gap: 12px">
+            <div class="card-title-row" style="margin-bottom: 0">
+              <h2 style="font-size: 17px">à¤Ÿà¥à¤°à¤¿à¤ª à¤­à¥à¤—à¤¤à¤¾à¤¨ à¤µà¤¿à¤µà¤°à¤£ (Trip History)</h2>
+              <span
+                style="font-size: 12.5px; color: var(--ink-soft)"
+                id="totalTripsCount"
+                >à¤•à¥à¤²: 18 à¤Ÿà¥à¤°à¤¿à¤ª</span
+              >
+            </div>
+
+            <div
+              id="earningsHistoryList"
+              style="display: flex; flex-direction: column; gap: 10px"
+            >
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Printable/Downloadable Statement Modal -->
+      <div id="statementModal" class="driver-modal-scrim">
+        <div class="driver-modal-sheet">
+          <div class="modal-drag-handle"></div>
+          <div
+            style="
+              border-bottom: 2px dashed var(--line);
+              padding-bottom: 12px;
+              margin-bottom: 16px;
+              text-align: center;
+            "
+          >
+            <h2 style="font-size: 20px; color: var(--primary)">
+              FarmLink AI â€” à¤ˆ-à¤­à¥à¤—à¤¤à¤¾à¤¨ à¤°à¤¸à¥€à¤¦
+            </h2>
+            <p style="font-size: 13px; color: var(--ink-soft)">
+              à¤¸à¤¾à¤°à¤¥à¥€ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤ªà¤¾à¤°à¥à¤Ÿà¤¨à¤° à¤¸à¤¾à¤ªà¥à¤¤à¤¾à¤¹à¤¿à¤• à¤µà¤¿à¤µà¤°à¤£
+            </p>
+            <span
+              class="mono"
+              style="font-size: 11.5px; color: var(--ink-muted)"
+              >à¤¦à¤¿à¤¨à¤¾à¤‚à¤•: 01 à¤¸à¤¿à¤¤à¤®à¥à¤¬à¤° 2026</span
+            >
+          </div>
+
+          <div
+            style="
+              font-size: 13.5px;
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+              margin-bottom: 18px;
+            "
+          >
+            <div style="display: flex; justify-content: space-between">
+              <span style="color: var(--ink-soft)">à¤¸à¤¾à¤°à¤¥à¥€ à¤¨à¤¾à¤®:</span>
+              <strong>à¤¸à¥à¤¨à¥€à¤² à¤¯à¤¾à¤¦à¤µ (UP32 AB 4521)</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between">
+              <span style="color: var(--ink-soft)">à¤•à¥à¤² à¤ªà¥‚à¤°à¥à¤£ à¤Ÿà¥à¤°à¤¿à¤ª:</span>
+              <strong id="stmtTrips">18 à¤Ÿà¥à¤°à¤¿à¤ª</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between">
+              <span style="color: var(--ink-soft)">à¤®à¥‚à¤² à¤•à¤¿à¤°à¤¾à¤¯à¤¾ à¤°à¤¾à¤¶à¤¿:</span>
+              <span>â‚¹12,200</span>
+            </div>
+            <div style="display: flex; justify-content: space-between">
+              <span style="color: var(--ink-soft)"
+                >AI à¤°à¥‚à¤Ÿ à¤ˆà¤‚à¤§à¤¨ à¤ªà¥à¤°à¥‹à¤¤à¥à¤¸à¤¾à¤¹à¤¨:</span
+              >
+              <span style="color: var(--success); font-weight: 700"
+                >+ â‚¹1,800</span
+              >
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                border-top: 1px solid var(--line);
+                padding-top: 10px;
+                font-size: 16px;
+              "
+            >
+              <strong>à¤•à¥à¤² à¤¦à¥‡à¤¯ à¤­à¥à¤—à¤¤à¤¾à¤¨:</strong>
+              <strong style="color: var(--primary)" id="stmtTotal"
+                >â‚¹14,600</strong
+              >
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 10px">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="btnCloseStmt"
+              style="flex: 1"
+            >
+              à¤¬à¤‚à¤¦ à¤•à¤°à¥‡à¤‚
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="window.print()"
+              style="flex: 1"
+            >
+              <i data-lucide="printer" style="width: 16px; height: 16px"></i>
+              <span>à¤ªà¥à¤°à¤¿à¤‚à¤Ÿ / PDF à¤¸à¥‡à¤µ</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../shared/assets/js/firebase.js"></script>
+    <script src="../../shared/assets/js/driver-data.js"></script>
+    <script src="../../shared/assets/js/driver-shell.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      window.driverShell.init("earnings", "à¤•à¤®à¤¾à¤ˆ à¤µ à¤­à¥à¤—à¤¤à¤¾à¤¨");
+
+      function renderEarnings() {
+        const data = window.farmlinkDriver.getEarningsSummary();
+
+        document.getElementById("dispWeeklyTotal").textContent =
+          window.farmlinkDriver.money(data.weekly_earnings);
+        document.getElementById("dispTodayEarning").textContent =
+          window.farmlinkDriver.money(data.today_earnings);
+        document.getElementById("dispPendingPayout").textContent =
+          window.farmlinkDriver.money(data.pending_payout);
+        document.getElementById("totalTripsCount").textContent =
+          `à¤•à¥à¤²: ${data.completed_deliveries_count} à¤Ÿà¥à¤°à¤¿à¤ª`;
+
+        document.getElementById("stmtTotal").textContent =
+          window.farmlinkDriver.money(data.weekly_earnings);
+        document.getElementById("stmtTrips").textContent =
+          `${data.completed_deliveries_count} à¤Ÿà¥à¤°à¤¿à¤ª`;
+
+        const list = document.getElementById("earningsHistoryList");
+        list.innerHTML = data.history
+          .map(
+            (item) => `
+          <div class="driver-card" style="padding:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+              <span class="mono" style="font-size:12.5px;font-weight:700;color:var(--ink-soft);">#${item.order_id || "ORD-TRIP"}</span>
+              <span class="badge ${item.status === "paid" ? "badge-delivered" : "badge-at_pickup"}">
+                ${item.status === "paid" ? "à¤–à¤¾à¤¤à¥‡ à¤®à¥‡à¤‚ à¤œà¤®à¤¾ âœ“" : "à¤†à¤—à¤¾à¤®à¥€ à¤ªà¥‡à¤†à¤‰à¤Ÿ"}
+              </span>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+              <strong style="font-size:14.5px;color:var(--ink);">${item.crop_name}</strong>
+              <strong style="font-size:17px;color:var(--primary);">${window.farmlinkDriver.money(item.amount)}</strong>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--ink-muted);">
+              <span>${item.distance_km || 25} km Â· à¤ªà¥‚à¤°à¥à¤£</span>
+              <span>${window.farmlinkDriver.formatDateTime(item.created_at)}</span>
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+
+        lucide.createIcons();
+      }
+
+      // Download Statement Modal
+      document
+        .getElementById("btnDownloadStatement")
+        .addEventListener("click", () => {
+          document.getElementById("statementModal").classList.add("open");
+        });
+
+      document.getElementById("btnCloseStmt").addEventListener("click", () => {
+        document.getElementById("statementModal").classList.remove("open");
+      });
+
+      renderEarnings();
+    </script>
+  </body>
+</html>

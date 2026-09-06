@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="hi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>FarmLink Driver â€” à¤¸à¤¾à¤°à¤¥à¥€ à¤ªà¥à¤°à¥‹à¤«à¤¾à¤‡à¤² à¤µ à¤¸à¤¹à¤¾à¤¯à¤¤à¤¾</title>
+    <link rel="stylesheet" href="../../shared/assets/css/driver.css" />
+  </head>
+  <body>
+    <div class="driver-app-frame">
+      <!-- Topbar Slot with Desktop Nav -->
+      <div id="driver-topbar-slot"></div>
+
+      <main class="driver-main">
+        <!-- Responsive Two Column Grid on Laptop/Desktop -->
+        <div class="responsive-two-col">
+          <!-- Left Column: Profile Card & Quick Actions -->
+          <div style="display: flex; flex-direction: column; gap: 16px">
+            <!-- Driver Profile Header Card -->
+            <div
+              class="driver-card"
+              style="text-align: center; padding: 24px 20px"
+            >
+              <div
+                style="
+                  position: relative;
+                  width: 80px;
+                  height: 80px;
+                  margin: 0 auto 12px;
+                "
+              >
+                <div
+                  style="
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    background: linear-gradient(
+                      135deg,
+                      var(--primary),
+                      #0f4428
+                    );
+                    color: var(--lime);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 32px;
+                    font-weight: 800;
+                    box-shadow: var(--shadow-md);
+                  "
+                >
+                  SY
+                </div>
+                <span
+                  style="
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 50%;
+                    background: var(--success);
+                    border: 2px solid #fff;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: #fff;
+                    font-size: 12px;
+                  "
+                >
+                  âœ“
+                </span>
+              </div>
+
+              <h2 id="profDispName" style="font-size: 20px; margin-bottom: 2px">
+                à¤¸à¥à¤¨à¥€à¤² à¤¯à¤¾à¤¦à¤µ
+              </h2>
+              <p
+                class="mono"
+                id="profDispPhone"
+                style="
+                  font-size: 13.5px;
+                  color: var(--ink-soft);
+                  margin-bottom: 10px;
+                "
+              >
+                +91 98765 43210
+              </p>
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 8px;
+                "
+              >
+                <span class="badge badge-approved" id="profVerifBadge"
+                  >à¤•à¥‡à¤µà¤¾à¤ˆà¤¸à¥€ à¤¸à¤¤à¥à¤¯à¤¾à¤ªà¤¿à¤¤ âœ“</span
+                >
+                <span
+                  class="badge"
+                  style="background: var(--surface); color: var(--ink)"
+                  >â­ 4.9 à¤°à¥‡à¤Ÿà¤¿à¤‚à¤—</span
+                >
+              </div>
+            </div>
+
+            <!-- Verification Link Card -->
+            <div
+              class="driver-card"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 16px;
+              "
+            >
+              <div>
+                <strong style="font-size: 14px"
+                  >à¤¦à¤¸à¥à¤¤à¤¾à¤µà¥‡à¤œà¤¼ à¤¸à¤¤à¥à¤¯à¤¾à¤ªà¤¨ à¤¸à¥à¤¥à¤¿à¤¤à¤¿</strong
+                >
+                <p style="font-size: 12.5px; color: var(--ink-soft); margin: 0">
+                  DL à¤”à¤° à¤—à¤¾à¤¡à¤¼à¥€ RC à¤«à¤¾à¤‡à¤²à¥‡à¤‚ à¤¦à¥‡à¤–à¥‡à¤‚
+                </p>
+              </div>
+              <a
+                href="driver-verification.html"
+                class="btn btn-sm btn-secondary"
+                style="width: auto"
+                >à¤¦à¥‡à¤–à¥‡à¤‚ &rsaquo;</a
+              >
+            </div>
+
+            <!-- Logout Card -->
+            <div class="driver-card" style="padding: 16px">
+              <button
+                type="button"
+                class="btn btn-danger-outline"
+                id="btnLogout"
+              >
+                <i data-lucide="log-out" style="width: 16px; height: 16px"></i>
+                <span>à¤²à¥‰à¤— à¤†à¤‰à¤Ÿ à¤•à¤°à¥‡à¤‚ (Sign Out)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Column: Profile Edit vs 24x7 Help Desk -->
+          <div style="display: flex; flex-direction: column; gap: 16px">
+            <!-- Tab Selector: Profile Edit vs Help & Support -->
+            <div class="tabs-nav" id="profileTabs">
+              <button class="tab-btn active" data-tab="details">
+                <i data-lucide="user" style="width: 15px; height: 15px"></i>
+                <span>à¤ªà¥à¤°à¥‹à¤«à¤¾à¤‡à¤² à¤¸à¤‚à¤ªà¤¾à¤¦à¤¨</span>
+              </button>
+              <button class="tab-btn" data-tab="support" id="tabSupportBtn">
+                <i
+                  data-lucide="life-buoy"
+                  style="width: 15px; height: 15px"
+                ></i>
+                <span>24x7 à¤¸à¤¹à¤¾à¤¯à¤¤à¤¾ (SOS)</span>
+              </button>
+            </div>
+
+            <!-- Section 1: Profile & Vehicle Details -->
+            <div id="sectionDetails">
+              <form id="profileEditForm" class="driver-card">
+                <h3
+                  style="
+                    font-size: 15px;
+                    color: var(--primary);
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    margin-bottom: 14px;
+                    border-bottom: 1px solid var(--line);
+                    padding-bottom: 8px;
+                  "
+                >
+                  à¤µà¥à¤¯à¤•à¥à¤¤à¤¿à¤—à¤¤ à¤µ à¤µà¤¾à¤¹à¤¨ à¤µà¤¿à¤µà¤°à¤£
+                </h3>
+
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 12px;
+                  "
+                >
+                  <div class="form-field">
+                    <label class="form-label" for="editName">à¤ªà¥‚à¤°à¤¾ à¤¨à¤¾à¤® *</label>
+                    <input
+                      type="text"
+                      id="editName"
+                      class="form-input"
+                      required
+                    />
+                  </div>
+
+                  <div class="form-field">
+                    <label class="form-label" for="editPhone"
+                      >à¤®à¥‹à¤¬à¤¾à¤‡à¤² à¤¨à¤‚à¤¬à¤°</label
+                    >
+                    <input
+                      type="text"
+                      id="editPhone"
+                      class="form-input"
+                      readonly
+                      style="background: var(--surface)"
+                    />
+                  </div>
+                </div>
+
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 12px;
+                  "
+                >
+                  <div class="form-field">
+                    <label class="form-label" for="editState">à¤°à¤¾à¤œà¥à¤¯ *</label>
+                    <input
+                      type="text"
+                      id="editState"
+                      class="form-input"
+                      required
+                    />
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label" for="editCity"
+                      >à¤¶à¤¹à¤° / à¤œà¤¼à¤¿à¤²à¤¾ *</label
+                    >
+                    <input
+                      type="text"
+                      id="editCity"
+                      class="form-input"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 12px;
+                  "
+                >
+                  <div class="form-field">
+                    <label class="form-label" for="editVehNum"
+                      >à¤—à¤¾à¤¡à¤¼à¥€ à¤¨à¤‚à¤¬à¤° (RC) *</label
+                    >
+                    <input
+                      type="text"
+                      id="editVehNum"
+                      class="form-input mono"
+                      style="text-transform: uppercase"
+                      required
+                    />
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label" for="editCapacity"
+                      >à¤•à¥à¤·à¤®à¤¤à¤¾ (kg) *</label
+                    >
+                    <input
+                      type="number"
+                      id="editCapacity"
+                      class="form-input"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-label" for="editDl"
+                    >à¤¡à¥à¤°à¤¾à¤‡à¤µà¤¿à¤‚à¤— à¤²à¤¾à¤‡à¤¸à¥‡à¤‚à¤¸ (DL No.) *</label
+                  >
+                  <input
+                    type="text"
+                    id="editDl"
+                    class="form-input mono"
+                    style="text-transform: uppercase"
+                    required
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label class="form-label" for="editEmergency"
+                    >à¤†à¤ªà¤¾à¤¤à¤•à¤¾à¤²à¥€à¤¨ à¤¸à¤‚à¤ªà¤°à¥à¤•</label
+                  >
+                  <input type="text" id="editEmergency" class="form-input" />
+                </div>
+
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  id="btnSaveProfile"
+                  style="margin-top: 10px"
+                >
+                  <span>à¤ªà¤°à¤¿à¤µà¤°à¥à¤¤à¤¨ à¤¸à¤¹à¥‡à¤œà¥‡à¤‚ (Save Changes)</span>
+                </button>
+              </form>
+            </div>
+
+            <!-- Section 2: 24/7 Driver Support & SOS -->
+            <div
+              id="sectionSupport"
+              style="display: none; flex-direction: column; gap: 16px"
+            >
+              <!-- Emergency SOS Callout -->
+              <div
+                class="driver-card"
+                style="background: #fef2f2; border: 1.5px solid #fca5a5"
+              >
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    margin-bottom: 10px;
+                  "
+                >
+                  <div
+                    style="
+                      width: 40px;
+                      height: 40px;
+                      border-radius: 50%;
+                      background: #ef4444;
+                      color: #fff;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      font-size: 20px;
+                    "
+                  >
+                    ðŸš¨
+                  </div>
+                  <div>
+                    <strong style="font-size: 15px; color: #991b1b"
+                      >à¤†à¤ªà¤¾à¤¤à¤•à¤¾à¤²à¥€à¤¨ SOS à¤¸à¤¹à¤¾à¤¯à¤¤à¤¾</strong
+                    >
+                    <p style="font-size: 12px; color: #b91c1c; margin: 0">
+                      à¤¦à¥à¤°à¥à¤˜à¤Ÿà¤¨à¤¾ à¤¯à¤¾ à¤—à¤‚à¤­à¥€à¤° à¤†à¤ªà¤¾à¤¤ à¤¸à¥à¤¥à¤¿à¤¤à¤¿ à¤®à¥‡à¤‚ à¤¤à¥à¤°à¤‚à¤¤ à¤…à¤²à¤°à¥à¤Ÿ à¤­à¥‡à¤œà¥‡à¤‚
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href="tel:112"
+                  class="btn btn-sm btn-primary"
+                  style="background: #dc2626; border: none"
+                >
+                  <i
+                    data-lucide="phone-call"
+                    style="width: 15px; height: 15px"
+                  ></i>
+                  <span>112 / à¤à¤®à¥à¤¬à¥à¤²à¥‡à¤‚à¤¸ à¤•à¥‹ à¤•à¥‰à¤² à¤•à¤°à¥‡à¤‚</span>
+                </a>
+              </div>
+
+              <!-- FarmLink 24x7 Help Desk Call -->
+              <div
+                class="driver-card"
+                style="
+                  background: var(--primary-tint);
+                  border: 1px solid var(--primary);
+                "
+              >
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 10px;
+                  "
+                >
+                  <div style="display: flex; align-items: center; gap: 8px">
+                    <i
+                      data-lucide="headphones"
+                      style="width: 22px; height: 22px; color: var(--primary)"
+                    ></i>
+                    <strong style="font-size: 15px; color: var(--primary-dark)"
+                      >FarmLink à¤¸à¤¾à¤°à¤¥à¥€ à¤¹à¥‡à¤²à¥à¤ªà¤²à¤¾à¤‡à¤¨</strong
+                    >
+                  </div>
+                  <span class="badge badge-approved">24x7 à¤‰à¤ªà¤²à¤¬à¥à¤§</span>
+                </div>
+                <p
+                  style="
+                    font-size: 13px;
+                    color: var(--primary-dark);
+                    margin-bottom: 14px;
+                  "
+                >
+                  à¤°à¥‚à¤Ÿ à¤®à¤¾à¤°à¥à¤—à¤¦à¤°à¥à¤¶à¤¨, à¤­à¥à¤—à¤¤à¤¾à¤¨ à¤¸à¤®à¤¸à¥à¤¯à¤¾, à¤¯à¤¾ à¤®à¤‚à¤¡à¥€ à¤ªà¥à¤°à¤µà¥‡à¤¶ à¤¸à¤¹à¤¾à¤¯à¤¤à¤¾ à¤•à¥‡ à¤²à¤¿à¤
+                  à¤¨à¤¿à¤¶à¥à¤²à¥à¤• à¤•à¥‰à¤² à¤•à¤°à¥‡à¤‚à¥¤
+                </p>
+                <a href="tel:1800FARMLINK" class="btn btn-primary">
+                  <i data-lucide="phone" style="width: 18px; height: 18px"></i>
+                  <span>1800-FARMLINK à¤ªà¤° à¤•à¥‰à¤² à¤•à¤°à¥‡à¤‚</span>
+                </a>
+              </div>
+
+              <!-- Quick Interactive Troubleshooting Guides -->
+              <div class="driver-card">
+                <h3
+                  style="
+                    font-size: 14.5px;
+                    color: var(--ink-soft);
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    margin-bottom: 12px;
+                  "
+                >
+                  à¤…à¤•à¥à¤¸à¤° à¤ªà¥‚à¤›à¥‡ à¤œà¤¾à¤¨à¥‡ à¤µà¤¾à¤²à¥‡ à¤¸à¤®à¤¾à¤§à¤¾à¤¨ (Troubleshooting)
+                </h3>
+
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    font-size: 13.5px;
+                  "
+                >
+                  <details
+                    style="
+                      background: var(--surface);
+                      padding: 12px 14px;
+                      border-radius: var(--radius-md);
+                      border: 1px solid var(--line);
+                      cursor: pointer;
+                    "
+                  >
+                    <summary style="font-weight: 700; color: var(--ink)">
+                      ðŸ“¦ à¤«à¤¸à¤² à¤–à¤°à¤¾à¤¬ / à¤­à¥€à¤— à¤—à¤ˆ à¤¹à¥ˆ, à¤•à¥à¤¯à¤¾ à¤•à¤°à¥‡à¤‚?
+                    </summary>
+                    <p
+                      style="
+                        font-size: 12.5px;
+                        color: var(--ink-soft);
+                        margin-top: 6px;
+                      "
+                    >
+                      à¤Ÿà¥à¤°à¤¿à¤ª à¤ªà¥‡à¤œ à¤ªà¤° 'à¤¸à¤®à¤¸à¥à¤¯à¤¾ à¤°à¤¿à¤ªà¥‹à¤°à¥à¤Ÿ' à¤¬à¤Ÿà¤¨ à¤¦à¤¬à¤¾à¤à¤‚ à¤”à¤° à¤«à¥‹à¤Ÿà¥‹ à¤–à¥€à¤‚à¤šà¥‡à¤‚à¥¤
+                      à¤–à¤°à¥€à¤¦à¤¾à¤° à¤µ à¤¸à¤ªà¥‹à¤°à¥à¤Ÿ à¤Ÿà¥€à¤® à¤¤à¥à¤°à¤‚à¤¤ à¤¨à¤¿à¤°à¥à¤£à¤¯ à¤²à¥‡à¤—à¥€à¥¤
+                    </p>
+                  </details>
+
+                  <details
+                    style="
+                      background: var(--surface);
+                      padding: 12px 14px;
+                      border-radius: var(--radius-md);
+                      border: 1px solid var(--line);
+                      cursor: pointer;
+                    "
+                  >
+                    <summary style="font-weight: 700; color: var(--ink)">
+                      ðŸ¢ à¤–à¤°à¥€à¤¦à¤¾à¤° à¤—à¥‹à¤¦à¤¾à¤® à¤ªà¤° à¤®à¥Œà¤œà¥‚à¤¦ à¤¨à¤¹à¥€à¤‚ à¤¹à¥ˆ / à¤«à¥‹à¤¨ à¤¨à¤¹à¥€à¤‚ à¤‰à¤  à¤°à¤¹à¤¾?
+                    </summary>
+                    <p
+                      style="
+                        font-size: 12.5px;
+                        color: var(--ink-soft);
+                        margin-top: 6px;
+                      "
+                    >
+                      10 à¤®à¤¿à¤¨à¤Ÿ à¤ªà¥à¤°à¤¤à¥€à¤•à¥à¤·à¤¾ à¤•à¤°à¥‡à¤‚à¥¤ à¤«à¤¿à¤° 'à¤–à¤°à¥€à¤¦à¤¾à¤° à¤…à¤¨à¥à¤ªà¤²à¤¬à¥à¤§' à¤°à¤¿à¤ªà¥‹à¤°à¥à¤Ÿ à¤¦à¤°à¥à¤œ
+                      à¤•à¤°à¥‡à¤‚à¥¤ 20 à¤®à¤¿à¤¨à¤Ÿ à¤¬à¤¾à¤¦ à¤°à¤¿à¤Ÿà¤°à¥à¤¨ à¤­à¤¤à¥à¤¤à¤¾ à¤¸à¥à¤µà¤¤à¤ƒ à¤²à¤¾à¤—à¥‚ à¤¹à¥‹à¤—à¤¾à¥¤
+                    </p>
+                  </details>
+
+                  <details
+                    style="
+                      background: var(--surface);
+                      padding: 12px 14px;
+                      border-radius: var(--radius-md);
+                      border: 1px solid var(--line);
+                      cursor: pointer;
+                    "
+                  >
+                    <summary style="font-weight: 700; color: var(--ink)">
+                      ðŸ›ž à¤°à¤¾à¤¸à¥à¤¤à¥‡ à¤®à¥‡à¤‚ à¤—à¤¾à¤¡à¤¼à¥€ à¤–à¤°à¤¾à¤¬ à¤¯à¤¾ à¤ªà¤‚à¤šà¤° à¤¹à¥‹ à¤—à¤ˆ?
+                    </summary>
+                    <p
+                      style="
+                        font-size: 12.5px;
+                        color: var(--ink-soft);
+                        margin-top: 6px;
+                      "
+                    >
+                      à¤¹à¥‡à¤²à¥à¤ªà¤²à¤¾à¤‡à¤¨ à¤ªà¤° à¤•à¥‰à¤² à¤•à¤°à¥‡à¤‚à¥¤ à¤ªà¤¾à¤¸ à¤•à¥‡ à¤…à¤¨à¥à¤¯ à¤‰à¤ªà¤²à¤¬à¥à¤§ à¤¸à¤¾à¤°à¤¥à¥€ à¤•à¥‹ à¤«à¤¸à¤²
+                      à¤Ÿà¥à¤°à¤¾à¤‚à¤¸à¤«à¤° à¤¹à¥‡à¤¤à¥ à¤­à¥‡à¤œà¤¾ à¤œà¤¾ à¤¸à¤•à¤¤à¤¾ à¤¹à¥ˆà¥¤
+                    </p>
+                  </details>
+
+                  <details
+                    style="
+                      background: var(--surface);
+                      padding: 12px 14px;
+                      border-radius: var(--radius-md);
+                      border: 1px solid var(--line);
+                      cursor: pointer;
+                    "
+                  >
+                    <summary style="font-weight: 700; color: var(--ink)">
+                      ðŸ’° à¤¦à¥ˆà¤¨à¤¿à¤• à¤•à¤®à¤¾à¤ˆ à¤–à¤¾à¤¤à¥‡ à¤®à¥‡à¤‚ à¤•à¤¬ à¤œà¤®à¤¾ à¤¹à¥‹à¤¤à¥€ à¤¹à¥ˆ?
+                    </summary>
+                    <p
+                      style="
+                        font-size: 12.5px;
+                        color: var(--ink-soft);
+                        margin-top: 6px;
+                      "
+                    >
+                      à¤¹à¤° à¤°à¤¾à¤¤ 8:00 à¤¬à¤œà¥‡ à¤¦à¤¿à¤¨ à¤­à¤° à¤•à¥€ à¤ªà¥‚à¤°à¥à¤£ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤•à¤¾ UPI à¤Ÿà¥à¤°à¤¾à¤‚à¤¸à¤«à¤°
+                      à¤¸à¥à¤µà¤¤à¤ƒ à¤•à¤° à¤¦à¤¿à¤¯à¤¾ à¤œà¤¾à¤¤à¤¾ à¤¹à¥ˆà¥¤
+                    </p>
+                  </details>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../shared/assets/js/firebase.js"></script>
+    <script src="../../shared/assets/js/driver-data.js"></script>
+    <script src="../../shared/assets/js/driver-shell.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      window.driverShell.init("profile", "à¤ªà¥à¤°à¥‹à¤«à¤¾à¤‡à¤² à¤µ à¤¸à¤¹à¤¾à¤¯à¤¤à¤¾");
+
+      const profile = window.farmlinkDriver.getProfile();
+
+      function loadProfile() {
+        document.getElementById("profDispName").textContent = profile.full_name;
+        document.getElementById("profDispPhone").textContent =
+          profile.phone_number;
+        document.getElementById("profVerifBadge").textContent =
+          profile.verification_status === "approved"
+            ? "à¤¸à¤¤à¥à¤¯à¤¾à¤ªà¤¿à¤¤ âœ“"
+            : "à¤²à¤‚à¤¬à¤¿à¤¤ (Pending)";
+
+        document.getElementById("editName").value = profile.full_name || "";
+        document.getElementById("editPhone").value = profile.phone_number || "";
+        document.getElementById("editState").value =
+          profile.state || "Uttar Pradesh";
+        document.getElementById("editCity").value = profile.city || "Lucknow";
+        document.getElementById("editVehNum").value =
+          profile.vehicle_number || "UP32 AB 4521";
+        document.getElementById("editCapacity").value =
+          profile.capacity_kg || 2500;
+        document.getElementById("editDl").value =
+          profile.licence_number || "UP-3220190048123";
+        document.getElementById("editEmergency").value =
+          profile.emergency_contact || "";
+      }
+
+      // Tabs switching
+      document.querySelectorAll("#profileTabs .tab-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          document
+            .querySelectorAll("#profileTabs .tab-btn")
+            .forEach((b) => b.classList.remove("active"));
+          this.classList.add("active");
+          const tab = this.dataset.tab;
+          if (tab === "details") {
+            document.getElementById("sectionDetails").style.display = "block";
+            document.getElementById("sectionSupport").style.display = "none";
+          } else {
+            document.getElementById("sectionDetails").style.display = "none";
+            document.getElementById("sectionSupport").style.display = "flex";
+          }
+        });
+      });
+
+      // Check hash for #support direct jump
+      if (window.location.hash === "#support") {
+        document.getElementById("tabSupportBtn").click();
+      }
+
+      // Save Profile Form
+      document
+        .getElementById("profileEditForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const updated = {
+            full_name: document.getElementById("editName").value.trim(),
+            state: document.getElementById("editState").value.trim(),
+            city: document.getElementById("editCity").value.trim(),
+            vehicle_number: document
+              .getElementById("editVehNum")
+              .value.trim()
+              .toUpperCase(),
+            capacity_kg: Number(document.getElementById("editCapacity").value),
+            licence_number: document
+              .getElementById("editDl")
+              .value.trim()
+              .toUpperCase(),
+            emergency_contact: document
+              .getElementById("editEmergency")
+              .value.trim(),
+          };
+
+          window.farmlinkDriver.saveProfile(updated);
+          window.driverShell.showToast("à¤ªà¥à¤°à¥‹à¤«à¤¾à¤‡à¤² à¤¸à¤«à¤²à¤¤à¤¾à¤ªà¥‚à¤°à¥à¤µà¤• à¤…à¤ªà¤¡à¥‡à¤Ÿ à¤¹à¥à¤ˆ!");
+          loadProfile();
+        });
+
+      // Logout
+      document.getElementById("btnLogout").addEventListener("click", () => {
+        if (confirm("à¤•à¥à¤¯à¤¾ à¤†à¤ª à¤²à¥‰à¤— à¤†à¤‰à¤Ÿ à¤•à¤°à¤¨à¤¾ à¤šà¤¾à¤¹à¤¤à¥‡ à¤¹à¥ˆà¤‚?")) {
+          sessionStorage.removeItem("farmlink_phone");
+          sessionStorage.removeItem("farmlink_mock_user_id");
+          window.location.href = "../../login.html";
+        }
+      });
+
+      loadProfile();
+    </script>
+  </body>
+</html>

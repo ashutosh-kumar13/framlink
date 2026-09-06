@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="hi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>FarmLink Driver â€” à¤¸à¤¾à¤°à¤¥à¥€ à¤¡à¥ˆà¤¶à¤¬à¥‹à¤°à¥à¤¡</title>
+    <link rel="stylesheet" href="../../shared/assets/css/driver.css" />
+  </head>
+  <body>
+    <div class="driver-app-frame">
+      <!-- Topbar Slot with Desktop Nav -->
+      <div id="driver-topbar-slot"></div>
+
+      <!-- Live Availability Toggle Bar -->
+      <div class="driver-status-banner">
+        <div class="status-info">
+          <div id="availDot" class="status-indicator-dot online"></div>
+          <div>
+            <div
+              id="availTitle"
+              style="font-weight: 800; font-size: 14.5px; color: var(--ink)"
+            >
+              à¤‰à¤ªà¤²à¤¬à¥à¤§ (Online)
+            </div>
+            <div id="availSub" style="font-size: 12px; color: var(--ink-muted)">
+              à¤¨à¤ˆ à¤•à¥ƒà¤·à¤¿ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤•à¥‡ à¤²à¤¿à¤ à¤‰à¤ªà¤²à¤¬à¥à¤§
+            </div>
+          </div>
+        </div>
+        <div class="switch-wrap">
+          <label class="custom-switch">
+            <input type="checkbox" id="availToggle" checked />
+            <span class="slider-round"></span>
+          </label>
+        </div>
+      </div>
+
+      <main class="driver-main">
+        <!-- Weather & Road Hazard Alert Banner -->
+        <div class="hazard-alert-banner" id="hazardBanner">
+          <div
+            style="
+              width: 36px;
+              height: 36px;
+              border-radius: 50%;
+              background: #fef3c7;
+              color: #d97706;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-shrink: 0;
+            "
+          >
+            <i data-lucide="cloud-rain" style="width: 20px; height: 20px"></i>
+          </div>
+          <div style="flex: 1">
+            <strong style="color: #92400e; font-size: 14px"
+              >à¤®à¥Œà¤¸à¤® à¤µ à¤®à¤¾à¤°à¥à¤— à¤šà¥‡à¤¤à¤¾à¤µà¤¨à¥€:</strong
+            >
+            <div style="font-size: 13px; color: #78350f; margin-top: 2px">
+              à¤¸à¥€à¤¤à¤¾à¤ªà¥à¤°-à¤²à¤–à¤¨à¤Š à¤®à¤¾à¤°à¥à¤— à¤ªà¤° à¤¹à¤²à¥à¤•à¥€ à¤¬à¤¾à¤°à¤¿à¤¶ â€”
+              <strong>FarmLink AI à¤—à¥à¤°à¥€à¤¨ à¤•à¥‰à¤°à¤¿à¤¡à¥‹à¤°</strong> à¤¬à¤¾à¤ˆà¤ªà¤¾à¤¸ à¤•à¤¾ à¤‰à¤ªà¤¯à¥‹à¤— à¤•à¤°à¥‡à¤‚à¥¤
+            </div>
+          </div>
+        </div>
+
+        <!-- Today's Performance Stats (4 cards across on desktop/laptop) -->
+        <div>
+          <div class="card-title-row">
+            <h2 style="font-size: 18px">
+              à¤†à¤œ à¤•à¤¾ à¤ªà¥à¤°à¤¦à¤°à¥à¤¶à¤¨ (Today's Performance)
+            </h2>
+            <a
+              href="driver-earnings.html"
+              style="font-size: 13.5px; color: var(--primary); font-weight: 800"
+              >à¤•à¤®à¤¾à¤ˆ à¤µà¤¿à¤µà¤°à¤£ &rsaquo;</a
+            >
+          </div>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                "
+              >
+                <div
+                  class="stat-icon"
+                  style="background: #ecfdf5; color: #059669"
+                >
+                  <i
+                    data-lucide="package-check"
+                    style="width: 22px; height: 22px"
+                  ></i>
+                </div>
+                <span
+                  class="badge"
+                  style="background: #ecfdf5; color: #059669; font-size: 11px"
+                  >+1 à¤†à¤œ</span
+                >
+              </div>
+              <div class="stat-val" id="statTodayTrips">0</div>
+              <div class="stat-lbl">à¤†à¤œ à¤•à¥€ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€</div>
+            </div>
+
+            <div class="stat-box">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                "
+              >
+                <div
+                  class="stat-icon"
+                  style="background: #fffbeb; color: #d97706"
+                >
+                  <i
+                    data-lucide="indian-rupee"
+                    style="width: 22px; height: 22px"
+                  ></i>
+                </div>
+                <span
+                  class="badge"
+                  style="background: #fffbeb; color: #d97706; font-size: 11px"
+                  >à¤¦à¥ˆà¤¨à¤¿à¤• à¤²à¤•à¥à¤·à¥à¤¯</span
+                >
+              </div>
+              <div
+                class="stat-val"
+                id="statTodayEarn"
+                style="color: var(--primary-deep)"
+              >
+                â‚¹0
+              </div>
+              <div class="stat-lbl">à¤†à¤œ à¤•à¥€ à¤•à¤®à¤¾à¤ˆ</div>
+            </div>
+
+            <div class="stat-box">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                "
+              >
+                <div
+                  class="stat-icon"
+                  style="background: #f0f9ff; color: #0284c7"
+                >
+                  <i data-lucide="clock" style="width: 22px; height: 22px"></i>
+                </div>
+                <span
+                  class="badge"
+                  style="background: #f0f9ff; color: #0284c7; font-size: 11px"
+                  >à¤¶à¥€à¤°à¥à¤· 5%</span
+                >
+              </div>
+              <div class="stat-val" id="statOnTime">â€”</div>
+              <div class="stat-lbl">à¤‘à¤¨-à¤Ÿà¤¾à¤‡à¤® à¤¦à¤°</div>
+            </div>
+
+            <div class="stat-box">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                "
+              >
+                <div
+                  class="stat-icon"
+                  style="background: #faf5ff; color: #7c3aed"
+                >
+                  <i data-lucide="star" style="width: 22px; height: 22px"></i>
+                </div>
+                <span
+                  class="badge"
+                  style="background: #faf5ff; color: #7c3aed; font-size: 11px"
+                  >à¤‰à¤¤à¥à¤•à¥ƒà¤·à¥à¤Ÿ</span
+                >
+              </div>
+              <div class="stat-val" id="statRating" style="color: #7c3aed">
+                â€”
+              </div>
+              <div class="stat-lbl">à¤¡à¥à¤°à¤¾à¤‡à¤µà¤° à¤°à¥‡à¤Ÿà¤¿à¤‚à¤—</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Responsive Multi-Column Layout on Laptop/Desktop -->
+        <div class="responsive-two-col">
+          <!-- Left Column: Active Delivery Hero Card -->
+          <div style="display: flex; flex-direction: column; gap: 18px">
+            <div class="card-title-row" style="margin-bottom: 0">
+              <h2 style="font-size: 18px">à¤¸à¤•à¥à¤°à¤¿à¤¯ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ (Active Trip)</h2>
+              <span
+                class="badge badge-in_transit"
+                style="font-size: 11.5px; padding: 4px 10px"
+              >
+                <span
+                  style="
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background: #0284c7;
+                    display: inline-block;
+                    animation: pulse-green 1.5s infinite;
+                  "
+                ></span>
+                à¤²à¤¾à¤‡à¤µ à¤œà¥€à¤ªà¥€à¤à¤¸
+              </span>
+            </div>
+            <div id="activeDeliveryContainer">
+              <!-- Dynamically Populated by JS -->
+            </div>
+
+            <!-- AI Route Assistant Feature Callout Card -->
+            <div class="ai-route-card" style="padding: 20px">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  margin-bottom: 10px;
+                "
+              >
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <div
+                    style="
+                      width: 36px;
+                      height: 36px;
+                      border-radius: 50%;
+                      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+                      color: #fff;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      box-shadow: 0 3px 10px rgba(124, 58, 237, 0.3);
+                    "
+                  >
+                    <i
+                      data-lucide="sparkles"
+                      style="width: 18px; height: 18px"
+                    ></i>
+                  </div>
+                  <div>
+                    <strong style="font-size: 15px; color: #5b21b6"
+                      >FarmLink AI à¤¸à¥à¤®à¤¾à¤°à¥à¤Ÿ à¤°à¥‚à¤Ÿ à¤…à¤¸à¤¿à¤¸à¥à¤Ÿà¥‡à¤‚à¤Ÿ</strong
+                    >
+                    <div
+                      style="
+                        font-size: 11.5px;
+                        color: #7c3aed;
+                        font-weight: 700;
+                      "
+                    >
+                      à¤•à¥ƒà¤·à¤¿ à¤²à¥‰à¤œà¤¿à¤¸à¥à¤Ÿà¤¿à¤•à¥à¤¸ à¤‘à¤ªà¥à¤Ÿà¤¿à¤®à¤¾à¤‡à¤œà¤¼à¤°
+                    </div>
+                  </div>
+                </div>
+                <span class="badge" style="background: #7c3aed; color: #fff"
+                  >AI à¤«à¤¼à¥€à¤šà¤°</span
+                >
+              </div>
+              <p
+                style="
+                  font-size: 13.5px;
+                  color: #4c1d95;
+                  margin-bottom: 14px;
+                  line-height: 1.45;
+                "
+              >
+                à¤«à¤¸à¤²à¥‹à¤‚ à¤•à¥‡ à¤¤à¥à¤µà¤°à¤¿à¤¤ à¤ªà¤°à¤¿à¤µà¤¹à¤¨ à¤¹à¥‡à¤¤à¥ à¤¸à¤¬à¤¸à¥‡ à¤›à¥‹à¤Ÿà¤¾ à¤µ à¤—à¤¡à¥à¤¢à¤¾-à¤®à¥à¤•à¥à¤¤ à¤®à¤¾à¤°à¥à¤— à¤šà¥à¤¨à¥‡à¤‚
+                â€” à¤”à¤¸à¤¤à¤¨ â‚¹190+ à¤¡à¥€à¤œà¤² à¤”à¤° 30 à¤®à¤¿à¤¨à¤Ÿ à¤¸à¤®à¤¯ à¤¬à¤šà¤¾à¤à¤‚à¥¤
+              </p>
+              <a
+                href="driver-delivery-details.html?id=del-8901"
+                class="btn btn-sm btn-primary"
+                style="
+                  background: #7c3aed;
+                  border: none;
+                  width: auto;
+                  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+                "
+              >
+                <span>à¤¸à¤•à¥à¤°à¤¿à¤¯ à¤Ÿà¥à¤°à¤¿à¤ª à¤ªà¤° AI à¤°à¥‚à¤Ÿ à¤¦à¥‡à¤–à¥‡à¤‚</span>
+                <i
+                  data-lucide="arrow-right"
+                  style="width: 15px; height: 15px"
+                ></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right Column: Recent Completed Deliveries -->
+          <div style="display: flex; flex-direction: column; gap: 14px">
+            <div class="card-title-row" style="margin-bottom: 2px">
+              <h2 style="font-size: 18px">
+                à¤¹à¤¾à¤² à¤•à¥€ à¤ªà¥‚à¤°à¥à¤£ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ (Recent Trips)
+              </h2>
+              <a
+                href="driver-deliveries.html"
+                style="
+                  font-size: 13.5px;
+                  color: var(--primary);
+                  font-weight: 800;
+                "
+                >à¤¸à¤­à¥€ à¤¦à¥‡à¤–à¥‡à¤‚ &rsaquo;</a
+              >
+            </div>
+            <div
+              id="recentDeliveriesList"
+              style="display: flex; flex-direction: column; gap: 12px"
+            >
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../shared/assets/js/firebase.js"></script>
+    <script src="../../shared/assets/js/driver-data.js"></script>
+    <script src="../../shared/assets/js/driver-shell.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      window.driverShell.init("home", "à¤¸à¤¾à¤°à¤¥à¥€ à¤¡à¥ˆà¤¶à¤¬à¥‹à¤°à¥à¤¡");
+
+      const escapeHtml = (value) =>
+        String(value ?? "").replace(
+          /[&<>"']/g,
+          (character) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[character],
+        );
+
+      // Availability State
+      const profile = window.farmlinkDriver.getProfile();
+      const availToggle = document.getElementById("availToggle");
+      const availDot = document.getElementById("availDot");
+      const availTitle = document.getElementById("availTitle");
+      const availSub = document.getElementById("availSub");
+
+      function syncAvailabilityUI(isAvailable) {
+        if (profile.verification_status !== "approved" && isAvailable) {
+          alert("à¤•à¥ƒà¤ªà¤¯à¤¾ à¤ªà¤¹à¤²à¥‡ à¤•à¥‡à¤µà¤¾à¤ˆà¤¸à¥€ à¤µ à¤¦à¤¸à¥à¤¤à¤¾à¤µà¥‡à¤œà¤¼ à¤¸à¤¤à¥à¤¯à¤¾à¤ªà¤¨ à¤ªà¥‚à¤°à¤¾ à¤•à¤°à¥‡à¤‚à¥¤");
+          availToggle.checked = false;
+          window.location.href = "driver-verification.html";
+          return;
+        }
+
+        if (isAvailable) {
+          availDot.className = "status-indicator-dot online";
+          availTitle.textContent = "à¤‰à¤ªà¤²à¤¬à¥à¤§ (Online)";
+          availSub.textContent = "à¤¨à¤ˆ à¤•à¥ƒà¤·à¤¿ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤•à¥‡ à¤²à¤¿à¤ à¤‰à¤ªà¤²à¤¬à¥à¤§";
+          window.farmlinkDriver.saveProfile({
+            availability_status: "available",
+          });
+        } else {
+          availDot.className = "status-indicator-dot offline";
+          availTitle.textContent = "à¤‘à¤«à¤²à¤¾à¤‡à¤¨ (Offline)";
+          availSub.textContent = "à¤•à¤¾à¤® à¤•à¥‡ à¤²à¤¿à¤ à¤‰à¤ªà¤²à¤¬à¥à¤§ à¤¨à¤¹à¥€à¤‚";
+          window.farmlinkDriver.saveProfile({ availability_status: "offline" });
+        }
+      }
+
+      availToggle.checked = profile.availability_status === "available";
+      syncAvailabilityUI(availToggle.checked);
+
+      availToggle.addEventListener("change", function () {
+        syncAvailabilityUI(this.checked);
+        window.driverShell.showToast(
+          this.checked ? "à¤†à¤ª à¤…à¤¬ à¤‘à¤¨à¤²à¤¾à¤‡à¤¨ à¤¹à¥ˆà¤‚!" : "à¤†à¤ª à¤‘à¤«à¤²à¤¾à¤‡à¤¨ à¤¹à¥‹ à¤—à¤ à¤¹à¥ˆà¤‚à¥¤",
+        );
+      });
+
+      // Load Deliveries
+      async function renderDashboard() {
+        const deliveries = await window.farmlinkDriver.fetchDeliveries("all");
+        const activeDelivery = deliveries.find((d) =>
+          [
+            "assigned",
+            "accepted",
+            "at_pickup",
+            "picked_up",
+            "in_transit",
+          ].includes(d.tracking_status),
+        );
+        const activeContainer = document.getElementById(
+          "activeDeliveryContainer",
+        );
+
+        if (activeDelivery) {
+          const statusLabels = {
+            assigned: {
+              label: "à¤†à¤µà¤‚à¤Ÿà¤¿à¤¤ â€” à¤¸à¥à¤µà¥€à¤•à¥ƒà¤¤à¤¿ à¤ªà¥à¤°à¤¤à¥€à¤•à¥à¤·à¤¿à¤¤",
+              badge: "badge-assigned",
+            },
+            accepted: {
+              label: "à¤¸à¥à¤µà¥€à¤•à¥ƒà¤¤ â€” à¤ªà¤¿à¤•à¤…à¤ª à¤•à¥‡ à¤²à¤¿à¤ à¤¨à¤¿à¤•à¤²à¥‡à¤‚",
+              badge: "badge-accepted",
+            },
+            at_pickup: {
+              label: "à¤ªà¤¿à¤•à¤…à¤ª à¤ªà¤° à¤ªà¤¹à¥à¤à¤šà¥‡ â€” à¤«à¤¸à¤² à¤²à¥‹à¤¡ à¤•à¤°à¥‡à¤‚",
+              badge: "badge-at_pickup",
+            },
+            picked_up: { label: "à¤«à¤¸à¤² à¤²à¥‹à¤¡ à¤¹à¥‹ à¤—à¤ˆ", badge: "badge-picked_up" },
+            in_transit: {
+              label: "à¤°à¤¾à¤¸à¥à¤¤à¥‡ à¤®à¥‡à¤‚ (In Transit)",
+              badge: "badge-in_transit",
+            },
+          };
+
+          const s = statusLabels[activeDelivery.tracking_status] || {
+            label: activeDelivery.tracking_status,
+            badge: "badge-assigned",
+          };
+
+          activeContainer.innerHTML = `
+            <div class="active-trip-hero">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                <span class="tag-eta"><i data-lucide="clock" style="width:14px;height:14px;"></i> à¤…à¤¨à¥à¤®à¤¾à¤¨à¤¿à¤¤ à¤†à¤—à¤®à¤¨: ${window.farmlinkDriver.formatTimeOnly(activeDelivery.estimated_arrival_time)}</span>
+                <span class="badge ${s.badge}">${s.label}</span>
+              </div>
+
+              <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+                <div style="width:52px;height:52px;border-radius:var(--radius-md);background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.2);">
+                  ${escapeHtml(activeDelivery.crop_emoji || "ðŸŒ¾")}
+                </div>
+                <div>
+                  <h3 style="font-size:20px;letter-spacing:-0.02em;">${escapeHtml(activeDelivery.crop_name)}</h3>
+                  <p style="font-size:13.5px;color:rgba(255,255,255,0.85);font-weight:500;">
+                    ${escapeHtml(activeDelivery.quantity_label)} Â· à¤‘à¤°à¥à¤¡à¤° #${escapeHtml(activeDelivery.order_id)}
+                  </p>
+                </div>
+              </div>
+
+              <div style="background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:18px;font-size:13.5px;display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;align-items:flex-start;gap:10px;">
+                  <span style="width:9px;height:9px;border-radius:50%;background:var(--lime);margin-top:5px;flex-shrink:0;"></span>
+                  <span><strong>à¤ªà¤¿à¤•à¤…à¤ª:</strong> ${escapeHtml(activeDelivery.pickup_address)}</span>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:10px;">
+                  <span style="width:9px;height:9px;border-radius:50%;background:#38BDF8;margin-top:5px;flex-shrink:0;"></span>
+                  <span><strong>à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€:</strong> ${escapeHtml(activeDelivery.dropoff_address)}</span>
+                </div>
+              </div>
+
+              <div style="display:flex;gap:12px;">
+                <a href="driver-delivery-details.html?id=${encodeURIComponent(activeDelivery.id)}" class="btn btn-lime" style="flex:1;">
+                  <i data-lucide="navigation" style="width:18px;height:18px;"></i>
+                  <span>à¤®à¤¾à¤°à¥à¤— à¤µ à¤²à¤¾à¤‡à¤µ à¤Ÿà¥à¤°à¥ˆà¤•à¤¿à¤‚à¤—</span>
+                </a>
+                <a href="tel:${encodeURIComponent(activeDelivery.pickup_farmer_phone || "")}" class="btn btn-secondary" style="background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.25);flex:0 0 54px;padding:0;" title="à¤•à¤¿à¤¸à¤¾à¤¨ à¤•à¥‹ à¤•à¥‰à¤² à¤•à¤°à¥‡à¤‚">
+                  <i data-lucide="phone" style="width:20px;height:20px;"></i>
+                </a>
+              </div>
+            </div>
+          `;
+        } else {
+          activeContainer.innerHTML = `
+            <div class="driver-card" style="text-align:center;padding:44px 24px;">
+              <div style="width:60px;height:60px;border-radius:50%;background:var(--bg-subtle);color:var(--ink-muted);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:var(--shadow-xs);">
+                <i data-lucide="package" style="width:30px;height:30px;"></i>
+              </div>
+              <h3 style="font-size:17px;margin-bottom:6px;">à¤•à¥‹à¤ˆ à¤¸à¤•à¥à¤°à¤¿à¤¯ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤¨à¤¹à¥€à¤‚ à¤¹à¥ˆ</h3>
+              <p style="font-size:13.5px;color:var(--ink-muted);margin-bottom:18px;max-width:320px;margin-left:auto;margin-right:auto;">
+                à¤†à¤ª à¤‘à¤¨à¤²à¤¾à¤‡à¤¨ à¤¹à¥ˆà¤‚à¥¤ à¤†à¤¸-à¤ªà¤¾à¤¸ à¤•à¥‡ à¤•à¤¿à¤¸à¤¾à¤¨à¥‹à¤‚ à¤•à¥‡ à¤¨à¤ à¤‘à¤°à¥à¤¡à¤° à¤¸à¥à¤µà¤¤à¤ƒ à¤¯à¤¹à¤¾à¤‚ à¤¦à¤¿à¤–à¤¾à¤ˆ à¤¦à¥‡à¤‚à¤—à¥‡à¥¤
+              </p>
+              <a href="driver-deliveries.html" class="btn btn-sm btn-secondary" style="max-width:240px;margin:0 auto;">
+                <i data-lucide="refresh-cw" style="width:15px;height:15px;"></i>
+                <span>à¤‘à¤°à¥à¤¡à¤° à¤¸à¥‚à¤šà¥€ à¤¦à¥‡à¤–à¥‡à¤‚</span>
+              </a>
+            </div>
+          `;
+        }
+
+        // Render Recent Completed
+        const completed = deliveries
+          .filter((d) => d.tracking_status === "delivered")
+          .slice(0, 4);
+        const recentList = document.getElementById("recentDeliveriesList");
+        if (completed.length === 0) {
+          recentList.innerHTML = `<p style="font-size:13.5px;color:var(--ink-muted);text-align:center;padding:20px;">à¤•à¥‹à¤ˆ à¤ªà¥‚à¤°à¥à¤£ à¤Ÿà¥à¤°à¤¿à¤ª à¤¨à¤¹à¥€à¤‚ à¤¹à¥ˆ</p>`;
+        } else {
+          recentList.innerHTML = completed
+            .map(
+              (c) => `
+            <div class="driver-card" style="padding:16px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <span style="font-size:20px;">${escapeHtml(c.crop_emoji || "ðŸŒ¾")}</span>
+                  <strong style="font-size:15px;color:var(--ink);">${escapeHtml(c.crop_name)}</strong>
+                </div>
+                <span class="badge badge-delivered">à¤¸à¤«à¤² à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ âœ“</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--ink-muted);">
+                <span>${escapeHtml(c.quantity_label)} Â· ${Number(c.distance_km || 0)} km</span>
+                <strong style="color:var(--primary);font-size:15px;font-family:var(--font-display);">+${window.farmlinkDriver.money(c.driver_earning)}</strong>
+              </div>
+            </div>
+          `,
+            )
+            .join("");
+        }
+
+        // Summary Stats
+        const earnings = window.farmlinkDriver.getEarningsSummary();
+        document.getElementById("statTodayEarn").textContent =
+          window.farmlinkDriver.money(earnings.today_earnings);
+        document.getElementById("statTodayTrips").textContent =
+          earnings.delivered_today_count || 0;
+        document.getElementById("statOnTime").textContent =
+          profile.on_time_rate || "â€”";
+        document.getElementById("statRating").textContent = profile.rating
+          ? `${profile.rating} â˜…`
+          : "â€”";
+
+        lucide.createIcons();
+      }
+
+      renderDashboard();
+    </script>
+  </body>
+</html>

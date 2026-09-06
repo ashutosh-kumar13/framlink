@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="hi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>FarmLink Driver â€” à¤®à¥‡à¤°à¥€ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤¸à¥‚à¤šà¥€</title>
+    <link rel="stylesheet" href="../../shared/assets/css/driver.css" />
+  </head>
+  <body>
+    <div class="driver-app-frame">
+      <!-- Topbar Slot with Desktop Nav -->
+      <div id="driver-topbar-slot"></div>
+
+      <main class="driver-main">
+        <div class="card-title-row" style="margin-bottom: 8px">
+          <div>
+            <h1>à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤•à¤¾à¤°à¥à¤¯ (Deliveries)</h1>
+            <p style="font-size: 13px; color: var(--ink-soft); margin: 0">
+              à¤†à¤µà¤‚à¤Ÿà¤¿à¤¤, à¤¸à¤•à¥à¤°à¤¿à¤¯ à¤µ à¤ªà¥‚à¤°à¥à¤£ à¤•à¥ƒà¤·à¤¿ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤ªà¥à¤°à¤¬à¤‚à¤§à¤¿à¤¤ à¤•à¤°à¥‡à¤‚
+            </p>
+          </div>
+          <button
+            id="btnRefresh"
+            class="btn btn-sm btn-secondary"
+            style="width: auto"
+            title="à¤°à¥€à¤«à¥à¤°à¥‡à¤¶"
+          >
+            <i data-lucide="refresh-cw" style="width: 15px; height: 15px"></i>
+            <span>à¤°à¥€à¤«à¥à¤°à¥‡à¤¶ à¤¸à¥‚à¤šà¥€</span>
+          </button>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="tabs-nav" id="deliveryTabs" style="max-width: 540px">
+          <button class="tab-btn active" data-tab="assigned">
+            <span>à¤†à¤µà¤‚à¤Ÿà¤¿à¤¤</span>
+            <span class="tab-badge" id="countAssigned">1</span>
+          </button>
+          <button class="tab-btn" data-tab="active">
+            <span>à¤¸à¤•à¥à¤°à¤¿à¤¯ (Active)</span>
+            <span class="tab-badge" id="countActive">1</span>
+          </button>
+          <button class="tab-btn" data-tab="completed">
+            <span>à¤ªà¥‚à¤°à¥à¤£ (Done)</span>
+            <span class="tab-badge" id="countCompleted">2</span>
+          </button>
+        </div>
+
+        <!-- Deliveries List Container (Responsive Grid on Laptop: 2-3 columns) -->
+        <div
+          id="deliveriesContainer"
+          class="responsive-grid-cards"
+          style="margin-top: 6px"
+        >
+          <!-- Populated by JS -->
+        </div>
+      </main>
+
+      <!-- Decline Reason Modal -->
+      <div id="declineModal" class="driver-modal-scrim">
+        <div class="driver-modal-sheet">
+          <div class="modal-drag-handle"></div>
+          <div style="text-align: center; margin-bottom: 14px">
+            <div
+              style="
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background: var(--danger-bg);
+                color: var(--danger);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 8px;
+              "
+            >
+              <i
+                data-lucide="alert-triangle"
+                style="width: 24px; height: 24px"
+              ></i>
+            </div>
+            <h3 style="font-size: 17px">à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤…à¤¸à¥à¤µà¥€à¤•à¤¾à¤° à¤•à¤°à¤¨à¥‡ à¤•à¤¾ à¤•à¤¾à¤°à¤£</h3>
+            <p style="font-size: 12.5px; color: var(--ink-soft)">
+              à¤•à¥ƒà¤ªà¤¯à¤¾ à¤•à¤¾à¤°à¤£ à¤šà¥à¤¨à¥‡à¤‚ à¤¤à¤¾à¤•à¤¿ à¤¯à¤¹ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤…à¤¨à¥à¤¯ à¤¸à¤¾à¤°à¤¥à¥€ à¤•à¥‹ à¤­à¥‡à¤œà¥€ à¤œà¤¾ à¤¸à¤•à¥‡
+            </p>
+          </div>
+
+          <form id="declineForm">
+            <input type="hidden" id="declineDeliveryId" />
+            <div class="form-field">
+              <label class="form-label">à¤•à¤¾à¤°à¤£ à¤šà¥à¤¨à¥‡à¤‚ *</label>
+              <select id="declineReasonSelect" class="form-select" required>
+                <option value="à¤µà¤¾à¤¹à¤¨ à¤•à¥à¤·à¤®à¤¤à¤¾ à¤¸à¥‡ à¤…à¤§à¤¿à¤• à¤µà¤œà¤¨ à¤¹à¥ˆ">
+                  à¤µà¤¾à¤¹à¤¨ à¤•à¥à¤·à¤®à¤¤à¤¾ à¤¸à¥‡ à¤…à¤§à¤¿à¤• à¤µà¤œà¤¨ à¤¹à¥ˆ (Over capacity)
+                </option>
+                <option value="à¤®à¤¾à¤°à¥à¤— à¤–à¤°à¤¾à¤¬ / à¤¬à¤¾à¤¢à¤¼ / à¤¦à¥à¤°à¥à¤—à¤® à¤•à¥à¤·à¥‡à¤¤à¥à¤°">
+                  à¤®à¤¾à¤°à¥à¤— à¤–à¤°à¤¾à¤¬ / à¤¬à¤¾à¤¢à¤¼ / à¤¦à¥à¤°à¥à¤—à¤® à¤•à¥à¤·à¥‡à¤¤à¥à¤° (Bad road / Flood)
+                </option>
+                <option value="à¤µà¤¾à¤¹à¤¨ à¤®à¥‡à¤‚ à¤¤à¤•à¤¨à¥€à¤•à¥€ à¤–à¤°à¤¾à¤¬à¥€ / à¤ªà¤‚à¤šà¤°">
+                  à¤µà¤¾à¤¹à¤¨ à¤®à¥‡à¤‚ à¤¤à¤•à¤¨à¥€à¤•à¥€ à¤–à¤°à¤¾à¤¬à¥€ / à¤ªà¤‚à¤šà¤° (Vehicle breakdown)
+                </option>
+                <option value="à¤¦à¥‚à¤°à¥€ à¤¬à¤¹à¥à¤¤ à¤…à¤§à¤¿à¤• / à¤¸à¤®à¤¯ à¤¸à¥€à¤®à¤¾ à¤¸à¤‚à¤­à¤µ à¤¨à¤¹à¥€à¤‚">
+                  à¤¦à¥‚à¤°à¥€ à¤¬à¤¹à¥à¤¤ à¤…à¤§à¤¿à¤• / à¤¸à¤®à¤¯ à¤¸à¥€à¤®à¤¾ à¤¸à¤‚à¤­à¤µ à¤¨à¤¹à¥€à¤‚ (Too far / Time issue)
+                </option>
+                <option value="à¤…à¤¨à¥à¤¯ à¤µà¥à¤¯à¤•à¥à¤¤à¤¿à¤—à¤¤ à¤•à¤¾à¤°à¤£">
+                  à¤…à¤¨à¥à¤¯ à¤µà¥à¤¯à¤•à¥à¤¤à¤¿à¤—à¤¤ à¤•à¤¾à¤°à¤£ (Other)
+                </option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label">à¤…à¤¤à¤¿à¤°à¤¿à¤•à¥à¤¤ à¤Ÿà¤¿à¤ªà¥à¤ªà¤£à¥€ (à¤µà¥ˆà¤•à¤²à¥à¤ªà¤¿à¤•)</label>
+              <input
+                type="text"
+                id="declineNote"
+                class="form-input"
+                placeholder="à¤µà¤¿à¤¸à¥à¤¤à¥ƒà¤¤ à¤•à¤¾à¤°à¤£ à¤²à¤¿à¤–à¥‡à¤‚..."
+              />
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 16px">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="btnCancelDecline"
+                style="flex: 1"
+              >
+                à¤°à¤¦à¥à¤¦ à¤•à¤°à¥‡à¤‚
+              </button>
+              <button
+                type="submit"
+                class="btn btn-danger-outline"
+                style="flex: 1"
+              >
+                à¤…à¤¸à¥à¤µà¥€à¤•à¤¾à¤° à¤•à¤°à¥‡à¤‚
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../shared/assets/js/firebase.js"></script>
+    <script src="../../shared/assets/js/driver-data.js"></script>
+    <script src="../../shared/assets/js/driver-shell.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      window.driverShell.init("deliveries", "à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤¸à¥‚à¤šà¥€");
+
+      let currentTab = "assigned";
+      let allDeliveries = [];
+
+      async function loadDeliveries() {
+        allDeliveries = await window.farmlinkDriver.fetchDeliveries("all");
+
+        // Update counts
+        const assigned = allDeliveries.filter(
+          (d) => d.tracking_status === "assigned",
+        );
+        const active = allDeliveries.filter((d) =>
+          ["accepted", "at_pickup", "picked_up", "in_transit"].includes(
+            d.tracking_status,
+          ),
+        );
+        const completed = allDeliveries.filter((d) =>
+          ["delivered", "failed_delivery", "cancelled"].includes(
+            d.tracking_status,
+          ),
+        );
+
+        document.getElementById("countAssigned").textContent = assigned.length;
+        document.getElementById("countActive").textContent = active.length;
+        document.getElementById("countCompleted").textContent =
+          completed.length;
+
+        renderTabList();
+      }
+
+      function renderTabList() {
+        const container = document.getElementById("deliveriesContainer");
+        let list = [];
+
+        if (currentTab === "assigned") {
+          list = allDeliveries.filter((d) => d.tracking_status === "assigned");
+        } else if (currentTab === "active") {
+          list = allDeliveries.filter((d) =>
+            ["accepted", "at_pickup", "picked_up", "in_transit"].includes(
+              d.tracking_status,
+            ),
+          );
+        } else {
+          list = allDeliveries.filter((d) =>
+            ["delivered", "failed_delivery", "cancelled"].includes(
+              d.tracking_status,
+            ),
+          );
+        }
+
+        if (list.length === 0) {
+          container.innerHTML = `
+            <div class="driver-card" style="grid-column: 1 / -1; text-align:center;padding:40px 20px;">
+              <div style="width:52px;height:52px;border-radius:50%;background:var(--surface);color:var(--ink-muted);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+                <i data-lucide="inbox" style="width:26px;height:26px;"></i>
+              </div>
+              <h3 style="font-size:16px;margin-bottom:4px;">à¤‡à¤¸ à¤¶à¥à¤°à¥‡à¤£à¥€ à¤®à¥‡à¤‚ à¤•à¥‹à¤ˆ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤¨à¤¹à¥€à¤‚ à¤¹à¥ˆ</h3>
+              <p style="font-size:13px;color:var(--ink-soft);">
+                ${currentTab === "assigned" ? "à¤«à¤¿à¤²à¤¹à¤¾à¤² à¤•à¥‹à¤ˆ à¤¨à¤¯à¤¾ à¤‘à¤°à¥à¤¡à¤° à¤†à¤µà¤‚à¤Ÿà¤¿à¤¤ à¤¨à¤¹à¥€à¤‚ à¤¹à¥ˆà¥¤" : "à¤•à¥‹à¤ˆ à¤°à¤¿à¤•à¥‰à¤°à¥à¤¡ à¤‰à¤ªà¤²à¤¬à¥à¤§ à¤¨à¤¹à¥€à¤‚ à¤¹à¥ˆà¥¤"}
+              </p>
+            </div>
+          `;
+          lucide.createIcons();
+          return;
+        }
+
+        container.innerHTML = list
+          .map((item) => {
+            const isAssigned = item.tracking_status === "assigned";
+            const isActive = [
+              "accepted",
+              "at_pickup",
+              "picked_up",
+              "in_transit",
+            ].includes(item.tracking_status);
+
+            const statusBadgeMap = {
+              assigned: '<span class="badge badge-assigned">à¤¨à¤¯à¤¾ à¤†à¤µà¤‚à¤Ÿà¤¨</span>',
+              accepted: '<span class="badge badge-accepted">à¤¸à¥à¤µà¥€à¤•à¥ƒà¤¤</span>',
+              at_pickup: '<span class="badge badge-at_pickup">à¤ªà¤¿à¤•à¤…à¤ª à¤ªà¤°</span>',
+              picked_up: '<span class="badge badge-picked_up">à¤²à¥‹à¤¡ à¤¹à¥à¤†</span>',
+              in_transit:
+                '<span class="badge badge-in_transit">à¤°à¤¾à¤¸à¥à¤¤à¥‡ à¤®à¥‡à¤‚</span>',
+              delivered:
+                '<span class="badge badge-delivered">à¤¸à¤«à¤² à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ âœ“</span>',
+              cancelled:
+                '<span class="badge badge-cancelled">à¤°à¤¦à¥à¤¦ / à¤…à¤¸à¥à¤µà¥€à¤•à¥ƒà¤¤</span>',
+            };
+
+            return `
+            <div class="driver-card" style="padding:20px;display:flex;flex-direction:column;justify-content:space-between;border-radius:var(--radius-lg);">
+              <div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                  <span class="mono" style="font-size:12.5px;font-weight:700;color:var(--ink-muted);">#${item.order_id}</span>
+                  ${statusBadgeMap[item.tracking_status] || '<span class="badge badge-assigned">' + item.tracking_status + "</span>"}
+                </div>
+
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                  <div style="display:flex;align-items:center;gap:12px;">
+                    <div style="width:48px;height:48px;border-radius:var(--radius-md);background:var(--primary-tint);display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:var(--shadow-xs);">
+                      ${item.crop_emoji || "ðŸŒ¾"}
+                    </div>
+                    <div>
+                      <h3 style="font-size:17px;letter-spacing:-0.02em;">${item.crop_name}</h3>
+                      <p style="font-size:13px;color:var(--ink-muted);">${item.quantity_label} Â· ${item.package_count || "à¤•à¤Ÿà¥à¤Ÿà¥‡"}</p>
+                    </div>
+                  </div>
+                  <div style="text-align:right;">
+                    <span style="font-size:11.5px;color:var(--ink-muted);font-weight:700;text-transform:uppercase;letter-spacing:0.04em;">à¤…à¤¨à¥à¤®à¤¾à¤¨à¤¿à¤¤ à¤•à¤¿à¤°à¤¾à¤¯à¤¾</span>
+                    <div style="font-size:18px;font-weight:800;color:var(--primary);font-family:var(--font-display);">${window.farmlinkDriver.money(item.driver_earning)}</div>
+                  </div>
+                </div>
+
+                <!-- Route points -->
+                <div style="background:var(--bg-subtle);border-radius:var(--radius-md);padding:14px;margin-bottom:16px;font-size:13px;display:flex;flex-direction:column;gap:10px;border:1px solid var(--line);">
+                  <div style="display:flex;align-items:flex-start;gap:10px;">
+                    <span style="width:8px;height:8px;border-radius:50%;background:var(--primary);margin-top:5px;flex-shrink:0;"></span>
+                    <span style="color:var(--ink-secondary);"><strong style="color:var(--ink);">à¤ªà¤¿à¤•à¤…à¤ª:</strong> ${item.pickup_farmer_name} â€” ${item.pickup_address}</span>
+                  </div>
+                  <div style="display:flex;align-items:flex-start;gap:10px;">
+                    <span style="width:8px;height:8px;border-radius:50%;background:#0284C7;margin-top:5px;flex-shrink:0;"></span>
+                    <span style="color:var(--ink-secondary);"><strong style="color:var(--ink);">à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€:</strong> ${item.dropoff_buyer_name} â€” ${item.dropoff_address}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action buttons -->
+              <div>
+                ${
+                  isAssigned
+                    ? `
+                  <div style="display:flex;gap:10px;">
+                    <button type="button" class="btn btn-lime btn-sm btn-accept" data-id="${item.id}" style="flex:2;">
+                      <i data-lucide="check" style="width:16px;height:16px;"></i>
+                      <span>à¤¸à¥à¤µà¥€à¤•à¤¾à¤° à¤•à¤°à¥‡à¤‚ (Accept)</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm btn-decline" data-id="${item.id}" style="flex:1;color:var(--danger);">
+                      <span>à¤…à¤¸à¥à¤µà¥€à¤•à¤¾à¤°</span>
+                    </button>
+                  </div>
+                `
+                    : isActive
+                      ? `
+                  <a href="driver-delivery-details.html?id=${item.id}" class="btn btn-primary btn-sm" style="width:100%;">
+                    <i data-lucide="navigation" style="width:16px;height:16px;"></i>
+                    <span>à¤®à¤¾à¤°à¥à¤— à¤µ à¤¸à¥à¤¥à¤¿à¤¤à¤¿ à¤…à¤ªà¤¡à¥‡à¤Ÿ à¤•à¤°à¥‡à¤‚ &rarr;</span>
+                  </a>
+                `
+                      : `
+                  <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px;padding-top:8px;border-top:1px solid var(--line);">
+                    <span style="color:var(--ink-muted);"><i data-lucide="calendar" style="width:14px;height:14px;display:inline;"></i> ${window.farmlinkDriver.formatDateTime(item.delivered_at || item.accepted_at)}</span>
+                    <a href="driver-delivery-details.html?id=${item.id}" style="color:var(--primary);font-weight:800;">à¤µà¤¿à¤µà¤°à¤£ à¤¦à¥‡à¤–à¥‡à¤‚ &rsaquo;</a>
+                  </div>
+                `
+                }
+              </div>
+            </div>
+          `;
+          })
+          .join("");
+
+        lucide.createIcons();
+      }
+
+      // Tab clicks
+      document.querySelectorAll("#deliveryTabs .tab-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          document
+            .querySelectorAll("#deliveryTabs .tab-btn")
+            .forEach((b) => b.classList.remove("active"));
+          this.classList.add("active");
+          currentTab = this.dataset.tab;
+          renderTabList();
+        });
+      });
+
+      // Actions Delegation
+      document.addEventListener("click", async function (e) {
+        // Accept Job
+        const acceptBtn = e.target.closest(".btn-accept");
+        if (acceptBtn) {
+          const id = acceptBtn.dataset.id;
+          acceptBtn.disabled = true;
+          try {
+            await window.farmlinkDriver.updateDeliveryStatus(
+              id,
+              "accepted",
+              "à¤¸à¤¾à¤°à¤¥à¥€ à¤¨à¥‡ à¤Ÿà¥à¤°à¤¿à¤ª à¤¸à¥à¤µà¥€à¤•à¤¾à¤° à¤•à¥€",
+            );
+            window.driverShell.showToast("à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤¸à¥à¤µà¥€à¤•à¤¾à¤° à¤•à¤° à¤²à¥€ à¤—à¤ˆ!");
+            await loadDeliveries();
+            // Automatically navigate to details
+            setTimeout(() => {
+              window.location.href = `driver-delivery-details.html?id=${id}`;
+            }, 600);
+          } catch (err) {
+            alert(err.message);
+            acceptBtn.disabled = false;
+          }
+        }
+
+        // Decline Job Dialog Trigger
+        const declineBtn = e.target.closest(".btn-decline");
+        if (declineBtn) {
+          const id = declineBtn.dataset.id;
+          document.getElementById("declineDeliveryId").value = id;
+          document.getElementById("declineModal").classList.add("open");
+        }
+      });
+
+      // Decline Modal Handlers
+      document
+        .getElementById("btnCancelDecline")
+        .addEventListener("click", () => {
+          document.getElementById("declineModal").classList.remove("open");
+        });
+
+      document
+        .getElementById("declineForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const id = document.getElementById("declineDeliveryId").value;
+          const select = document.getElementById("declineReasonSelect").value;
+          const note = document.getElementById("declineNote").value.trim();
+          const fullReason = select + (note ? ` (${note})` : "");
+
+          await window.farmlinkDriver.declineDelivery(id, fullReason);
+          document.getElementById("declineModal").classList.remove("open");
+          window.driverShell.showToast("à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤…à¤¸à¥à¤µà¥€à¤•à¤¾à¤° à¤•à¥€ à¤—à¤ˆà¥¤");
+          await loadDeliveries();
+        });
+
+      document
+        .getElementById("btnRefresh")
+        .addEventListener("click", loadDeliveries);
+
+      loadDeliveries();
+    </script>
+  </body>
+</html>
